@@ -34,7 +34,7 @@
       <nav class="nav-links">
         <a href="#section-video" class="nav-link nav-link-highlight">🎬 影音微課</a>
         <a href="#section-core" class="nav-link">核心思維</a>
-        <a href="#section-cases" class="nav-link">6大案例</a>
+        <a href="#section-cases" class="nav-link">12大經典案例</a>
         <a href="#section-table" class="nav-link">綜合速查表</a>
         <a href="#section-summary" class="nav-link">總結審查</a>
         <a href="#section-quiz" class="nav-link">觀念測驗</a>
@@ -89,15 +89,15 @@
       <div class="hero-meta-bar">
         <div class="meta-item">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10M6 10h10"/></svg>
-          <span>篇幅：4 頁完整講義</span>
+          <span>篇幅：完整 9 頁講義筆記精華</span>
         </div>
         <div class="meta-item">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          <span>審查基準：現行最新法規</span>
+          <span>審查基準：現行最新法規與憲法意旨</span>
         </div>
         <div class="meta-item">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          <span>涵蓋法條：刑法 §16、§18、§19、§20、§23、§24、§87</span>
+          <span>涵蓋法條：刑法 §16~§24、§87 及超法定事由</span>
         </div>
       </div>
 
@@ -159,6 +159,13 @@
           <span class="tab-info">
             <span class="tab-title">高級版：法學深究與最新憲判修法</span>
             <span class="tab-meta">適合法研所與司律 • 規範罪責與§87革新</span>
+          </span>
+        </button>
+        <button class="level-tab" data-level="cases" role="tab" aria-selected="false">
+          <span class="tab-icon">⚔️</span>
+          <span class="tab-info">
+            <span class="tab-title">案例特輯：阻卻違法之極限</span>
+            <span class="tab-meta">櫻桃案 • 輸血案 • 黑白猜 • 義務衝突</span>
           </span>
         </button>
       </div>
@@ -389,16 +396,63 @@
             「雖然做了一件壞事，但並不是法律應予非難的壞人。」
           </div>
         </div>
+
+        <!-- 不法階層之雙重指標與目的犯罪論構造 (書本照片筆記核心整合) -->
+        <div class="theory-deep-dive-card" style="margin-top: 24px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 24px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 1.5rem;">⚖️</span>
+              <h3 style="margin: 0; font-size: 1.25rem; font-family: var(--font-serif); color: var(--text-primary);">不法之雙重指標：法益侵害 ＋ 無正當理由</h3>
+            </div>
+            <span class="status-pill pill-cyan" style="font-size: 0.8rem;">德日三階論 • 目的犯罪體系精要</span>
+          </div>
+
+          <p style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 16px;">
+            書本原著特別強調：所謂<strong>「不法 (Unrecht)」</strong>，絕非單純的條文形式該當，而是由<strong>兩大指標</strong>緊密交織而成：
+          </p>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 20px;">
+            <div style="background: var(--bg-input); padding: 16px; border-radius: var(--radius-md); border-left: 4px solid var(--accent-red);">
+              <h4 style="margin: 0 0 8px 0; color: var(--accent-red); font-size: 1rem; display: flex; align-items: center; gap: 6px;">
+                <span>① 形式不法：法益侵害</span>
+                <small style="color: var(--text-muted); font-size: 0.75rem;">（構成要件該當性 TB）</small>
+              </h4>
+              <p style="margin: 0; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6;">
+                行為在客觀上製造了法所不容許的風險，侵害了特定人的生命、身體、自由或財產法益，符合刑法分則構成要件之客觀描述。
+              </p>
+            </div>
+
+            <div style="background: var(--bg-input); padding: 16px; border-radius: var(--radius-md); border-left: 4px solid var(--accent-green);">
+              <h4 style="margin: 0 0 8px 0; color: var(--accent-green); font-size: 1rem; display: flex; align-items: center; gap: 6px;">
+                <span>② 實質不法：無正當理由</span>
+                <small style="color: var(--text-muted); font-size: 0.75rem;">（違法性與實質秩序審查 R）</small>
+              </h4>
+              <p style="margin: 0; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6;">
+                若行為符合法定（§21~§24）或超法定（得承諾、義務衝突）正當事由，則行為合乎整體法秩序之實質目的，從而阻卻違法、排除實質不法。
+              </p>
+            </div>
+          </div>
+
+          <!-- 目的犯罪論的主客觀雙重檢驗 -->
+          <div style="background: rgba(59, 130, 246, 0.06); border: 1px dashed var(--accent-blue); border-radius: var(--radius-md); padding: 16px;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+              <span style="color: var(--accent-blue); font-weight: 700;">💡 目的犯罪論之審查演進：主客觀雙重檢驗</span>
+            </div>
+            <p style="margin: 0; font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6;">
+              早期古典學派曾認為「不法純客觀、罪責純主觀」。現代<strong>目的犯罪論（威爾澤爾 Welzel）</strong>確立：不法與罪責皆兼具主客觀要件！行為人要推翻違法性推定，不僅客觀上必須具備<strong>「客觀阻卻情狀」</strong>（如現在不法侵害、緊急危難、被害人承諾），主觀上亦必須具備<strong>「主觀阻卻意思」</strong>（如防衛意思、避難意思、知悉承諾），方能徹底阻卻違法！
+            </p>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- 貳、原書案例解析與抗辯事由 -->
+    <!-- 貳、案例解析與抗辯事由 -->
     <section id="section-cases" class="content-section">
       <div class="section-header">
         <div class="section-number">貳</div>
         <div>
-          <h2 class="section-title">原書案例解析與抗辯事由（對比現行法適用性）</h2>
-          <p class="section-desc">書中列舉 6 大典型抗辯案例，涵蓋刑法總則各項法定阻卻／減輕罪責及超法定事由。以下進行條理化剖析與最新法現狀審查：</p>
+          <h2 class="section-title">講義經典案例對照庫（阻卻罪責 • 阻卻違法 • 實質極限）</h2>
+          <p class="section-desc">彙整書本 12 大典型抗辯與實務爭議案例，涵蓋阻卻罪責、法定與超法定阻卻違法，以及正當防衛與緊急避難之實質極限排除：</p>
         </div>
       </div>
 
@@ -408,14 +462,17 @@
           <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
           </svg>
-          <input type="text" id="caseSearchInput" placeholder="搜尋案例（例：精神狀況、未成年、瘖啞、期待可能性、第16條...）" aria-label="搜尋案例">
+          <input type="text" id="caseSearchInput" placeholder="搜尋案例（例：櫻桃案、輸血案、黑白猜、義務衝突、第19條、精神障礙...）" aria-label="搜尋案例">
           <button id="clearSearchBtn" class="clear-btn" style="display:none;">&times;</button>
         </div>
         <div class="filter-chips">
-          <button class="chip active" data-filter="all">全部 (6)</button>
-          <button class="chip" data-filter="applicable">現行法完全適用 (4)</button>
+          <button class="chip active" data-filter="all">全部 (12)</button>
+          <button class="chip" data-filter="culpability">阻卻罪責 (6)</button>
+          <button class="chip" data-filter="justification">阻卻違法 (4)</button>
+          <button class="chip" data-filter="extreme">實質極限排除 (2)</button>
+          <button class="chip" data-filter="applicable">現行完全適用 (8)</button>
           <button class="chip" data-filter="updated">配套法規革新 (1)</button>
-          <button class="chip" data-filter="major">保安處分重大修法 (1)</button>
+          <button class="chip" data-filter="major">保安處分修法 (1)</button>
         </div>
       </div>
 
@@ -423,7 +480,7 @@
       <div class="cases-grid" id="casesGrid">
 
         <!-- 案例 1-1 -->
-        <article class="case-card" data-category="applicable" id="case-1">
+        <article class="case-card" data-category="culpability applicable" id="case-1">
           <div class="case-card-header">
             <div class="case-number-badge">案例 1-1</div>
             <h3 class="case-title">欠缺不法意識之抗辯</h3>
@@ -466,7 +523,7 @@
         </article>
 
         <!-- 案例 1-2 -->
-        <article class="case-card" data-category="updated" id="case-2">
+        <article class="case-card" data-category="culpability updated" id="case-2">
           <div class="case-card-header">
             <div class="case-number-badge">案例 1-2</div>
             <h3 class="case-title">欠缺責任能力（年齡）之抗辯</h3>
@@ -517,7 +574,7 @@
         </article>
 
         <!-- 案例 1-3 -->
-        <article class="case-card" data-category="major" id="case-3">
+        <article class="case-card" data-category="culpability major" id="case-3">
           <div class="case-card-header">
             <div class="case-number-badge">案例 1-3</div>
             <h3 class="case-title">欠缺責任能力（精神狀況）之抗辯</h3>
@@ -569,7 +626,7 @@
         </article>
 
         <!-- 案例 1-4 -->
-        <article class="case-card" data-category="applicable" id="case-4">
+        <article class="case-card" data-category="culpability applicable" id="case-4">
           <div class="case-card-header">
             <div class="case-number-badge">案例 1-4</div>
             <h3 class="case-title">欠缺責任能力（生理限制：瘖啞人）之抗辯</h3>
@@ -618,7 +675,7 @@
         </article>
 
         <!-- 案例 1-5 -->
-        <article class="case-card" data-category="applicable" id="case-5">
+        <article class="case-card" data-category="culpability applicable" id="case-5">
           <div class="case-card-header">
             <div class="case-number-badge">案例 1-5</div>
             <h3 class="case-title">防衛過當／避難過當之抗辯</h3>
@@ -661,7 +718,7 @@
         </article>
 
         <!-- 案例 1-6 -->
-        <article class="case-card" data-category="applicable" id="case-6">
+        <article class="case-card" data-category="culpability applicable" id="case-6">
           <div class="case-card-header">
             <div class="case-number-badge">案例 1-6</div>
             <h3 class="case-title">超法定阻卻罪責事由（無期待可能性）</h3>
@@ -703,6 +760,264 @@
           </div>
         </article>
 
+        <!-- 案例 1-7 -->
+        <article class="case-card" data-category="justification statutory applicable" id="case-7">
+          <div class="case-card-header">
+            <div class="case-number-badge">案例 1-7</div>
+            <h3 class="case-title">依法令之行為（優生保健法人工流產）</h3>
+            <span class="status-pill pill-green">法定阻卻違法 • 現行法完全適用</span>
+          </div>
+
+          <div class="dialogue-box">
+            <div class="dialogue-row">
+              <div class="avatar defendant">醫師</div>
+              <div class="bubble defendant-bubble">
+                「孕婦胎兒經醫學診斷有嚴重遺傳性疾病，我是依法為其施行人工流產，絕非故意違法墮胎！」
+              </div>
+            </div>
+          </div>
+
+          <div class="article-box">
+            <div class="article-header">
+              <span class="article-tag">【核心法條】</span>
+              <span class="article-name">刑法第 21 條第 1 項（依法令之行為）</span>
+              <button class="copy-btn" data-copy="刑法第21條第1項：依法令之行為，不罰。" title="複製法條內容">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                <span>複製條文</span>
+              </button>
+            </div>
+            <div class="article-desc">
+              <strong>【法律說明】</strong>依刑法第 288 條等規定，懷胎婦女服藥墮胎或醫師施行墮胎原本構成犯罪。但若醫師係依據特別法《優生保健法》第 9 條之規定程序施行人工流產，屬於<strong>「依法令之行為」</strong>，依刑法第 21 條第 1 項規定<strong>不罰（阻卻違法）</strong>。
+            </div>
+          </div>
+
+          <div class="review-box review-green">
+            <div class="review-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              現行法檢視
+            </div>
+            <p>特別法優先於普通法，整體法秩序不可能一方面授權或要求公民守法，另一方面又課予刑罰。此為典型法定阻卻違法事由，現行法完全適用。</p>
+          </div>
+        </article>
+
+        <!-- 案例 1-8 -->
+        <article class="case-card" data-category="justification statutory applicable" id="case-8">
+          <div class="case-card-header">
+            <div class="case-number-badge">案例 1-8</div>
+            <h3 class="case-title">依上級公務員命令之職務行為</h3>
+            <span class="status-pill pill-green">法定阻卻違法 • 現行法完全適用</span>
+          </div>
+
+          <div class="dialogue-box">
+            <div class="dialogue-row">
+              <div class="avatar defendant">員警</div>
+              <div class="bubble defendant-bubble">
+                「報告長官，我是奉長官合法核發之搜索票命令，依法破門執行查緝搜索！」
+              </div>
+            </div>
+          </div>
+
+          <div class="article-box">
+            <div class="article-header">
+              <span class="article-tag">【核心法條】</span>
+              <span class="article-name">刑法第 21 條第 2 項（依命令之行為）</span>
+              <button class="copy-btn" data-copy="刑法第21條第2項：依所屬上級公務員命令之職務上行為，不罰。但明知命令違法者，不在此限。" title="複製法條內容">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                <span>複製條文</span>
+              </button>
+            </div>
+            <div class="article-desc">
+              <strong>【法律說明】</strong>基於公務體系服從義務，公務員執行上級職務命令不罰。但為防止盲從國家暴力，設有但書嚴格限制：<strong>「但明知命令違法者，不在此限」</strong>。
+            </div>
+          </div>
+
+          <div class="review-box review-green">
+            <div class="review-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              現行法檢視
+            </div>
+            <p>公務員執行命令若形式合法且非明知違法，阻卻違法。但若命令明顯構成刑事犯罪（例如命令違法刑求），則無阻卻違法餘地。</p>
+          </div>
+        </article>
+
+        <!-- 案例 1-9 -->
+        <article class="case-card" data-category="justification suprastatutory applicable" id="case-9">
+          <div class="case-card-header">
+            <div class="case-number-badge">案例 1-9</div>
+            <h3 class="case-title">【黑白猜打巴掌案】得被害人承諾</h3>
+            <span class="status-pill pill-cyan">超法定阻卻違法 • 法理黃金準則</span>
+          </div>
+
+          <div class="dialogue-box">
+            <div class="dialogue-row">
+              <div class="avatar defendant">小明</div>
+              <div class="bubble defendant-bubble">
+                「我們玩黑白猜，他自己願賭服輸叫我用力打他一巴掌，這怎麼能算我傷害罪？」
+              </div>
+            </div>
+            <div class="dialogue-row">
+              <div class="avatar defendant" style="background:var(--accent-cyan); color:#000;">小華</div>
+              <div class="bubble defendant-bubble">
+                「對啊，我自己願賭服輸答應的，我們只是好玩在遊戲，我完全同意他打我！」
+              </div>
+            </div>
+          </div>
+
+          <div class="article-box">
+            <div class="article-header">
+              <span class="article-tag">【核心法理】</span>
+              <span class="article-name">超法定阻卻違法——得被害人承諾 (Einwilligung)</span>
+              <button class="copy-btn" data-copy="超法定阻卻違法：得被害人承諾。處分權人真摯自主處分其個人法益，且未背離公序良俗者，阻卻實質違法性。" title="複製法理內容">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                <span>複製法理</span>
+              </button>
+            </div>
+            <div class="article-desc">
+              <strong>【法律說明】</strong>打巴掌造成疼痛紅腫，形式上完全該當刑法第 277 條第 1 項傷害罪。但法益主體對於自己具有處分權之法益（非生命法益），在自由意志下為真摯承諾，且<strong>行為並未背離公序良俗</strong>，法律尊重個人自主權，阻卻實質違法性！
+            </div>
+          </div>
+
+          <div class="review-box review-cyan">
+            <div class="review-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              審查要件嚴格檢驗
+            </div>
+            <p>得被害人承諾之三大鐵律：① 被害人具處分權限（生命法益不得承諾，故加工自殺仍受處罰）；② 承諾真摯自由無瑕疵；③ 內容與手段未背離公序良俗。</p>
+          </div>
+        </article>
+
+        <!-- 案例 1-10 -->
+        <article class="case-card" data-category="justification suprastatutory applicable" id="case-10">
+          <div class="case-card-header">
+            <div class="case-number-badge">案例 1-10</div>
+            <h3 class="case-title">【火海救子案】義務衝突之阻卻違法</h3>
+            <span class="status-pill pill-cyan">超法定阻卻違法 • 法律不強人所難</span>
+          </div>
+
+          <div class="dialogue-box">
+            <div class="dialogue-row">
+              <div class="avatar defendant">父親</div>
+              <div class="bubble defendant-bubble">
+                「大火瞬間吞噬了兩個房間，我只有力氣抱出大兒子，小兒子不幸罹難……我難道故意殺了自己兒子嗎？」
+              </div>
+            </div>
+          </div>
+
+          <div class="article-box">
+            <div class="article-header">
+              <span class="article-tag">【核心法理】</span>
+              <span class="article-name">超法定阻卻違法——義務衝突 (Pflichtenkollision)</span>
+              <button class="copy-btn" data-copy="超法定阻卻違法：義務衝突。數個等價之法律作為義務同時存在，客觀上無法兼顧時，行為人履行其一即阻卻另一不作為之違法。" title="複製法理內容">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                <span>複製法理</span>
+              </button>
+            </div>
+            <div class="article-desc">
+              <strong>【法律說明】</strong>身為父母對兩子皆有保證人救助義務。客觀上時間與體力只能救一人時，兩個等價生命之作為義務發生衝突。法諺云：<strong>「法律不強人所難 (Ultra posse nemo tenetur)」</strong>。只要父親真誠履行其中一項義務，對於客觀上無法兼顧的另一不作為，法律予以阻卻違法！
+            </div>
+          </div>
+
+          <div class="review-box review-cyan">
+            <div class="review-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              現行法檢視
+            </div>
+            <p>義務衝突屬通說公認之超法定阻卻違法事由。在客觀不能兩全的悲劇極限情境中，刑法絕不要求公民當全能超人，行為人不成立不作為殺人罪。</p>
+          </div>
+        </article>
+
+        <!-- 案例 1-11 -->
+        <article class="case-card" data-category="extreme non-justification" id="case-11">
+          <div class="case-card-header">
+            <div class="case-number-badge">案例 1-11</div>
+            <h3 class="case-title">【櫻桃案】權利濫用與防衛權之極限</h3>
+            <span class="status-pill pill-red">實質極限排除 • 不能阻卻違法</span>
+          </div>
+
+          <div class="dialogue-box">
+            <div class="dialogue-row">
+              <div class="avatar defendant">老莊主</div>
+              <div class="bubble defendant-bubble">
+                「我坐輪椅追不上小偷，小學生偷採我櫻桃是現在不法侵害，開槍是我唯一有效手段，第 23 條又沒說要法益衡平！」
+              </div>
+            </div>
+            <div class="dialogue-row lawyer-row">
+              <div class="avatar lawyer">法官</div>
+              <div class="bubble lawyer-bubble">
+                「正當防衛不得違背法秩序目的！拿人命換一顆櫻桃屬於極端權利濫用，絕不能阻卻違法，成立殺人罪！」
+              </div>
+            </div>
+          </div>
+
+          <div class="article-box">
+            <div class="article-header">
+              <span class="article-tag">【核心爭點】</span>
+              <span class="article-name">刑法第 23 條（正當防衛之法律倫理限制與權利濫用）</span>
+              <button class="copy-btn" data-copy="阻卻違法實質極限：正當防衛禁止權利濫用。防衛手段所侵害之法益與保護法益極度顯著失衡時（生命 vs 櫻桃），不得阻卻違法，成立殺人罪。" title="複製法理內容">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                <span>複製法理</span>
+              </button>
+            </div>
+            <div class="article-desc">
+              <strong>【法理剖析】</strong>刑法第 23 條本文雖未如緊急避難明文要求「利益衡量」，但正當防衛本質是「法秩序之維護」。當保全利益與防衛損害達到<strong>「極端顯著不成比例」</strong>（一顆微不足道的櫻桃 vs 幼童生命）時，防衛行為構成<strong>「權利濫用」</strong>，違反整體法秩序實質目的，<strong>不能阻卻違法</strong>！
+            </div>
+          </div>
+
+          <div class="review-box review-red">
+            <div class="review-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              實務與通說定論
+            </div>
+            <p>德日及台灣刑法一致認定：防衛權受誠實信用原則與權利濫用禁止原則之倫理限縮。莊主不得主張正當防衛，依法成立<strong>刑法第 271 條普通殺人罪</strong>！</p>
+          </div>
+        </article>
+
+        <!-- 案例 1-12 -->
+        <article class="case-card" data-category="extreme non-justification" id="case-12">
+          <div class="case-card-header">
+            <div class="case-number-badge">案例 1-12</div>
+            <h3 class="case-title">【強抽輸血案】人性尊嚴與避難手段底線</h3>
+            <span class="status-pill pill-red">實質極限排除 • 不能阻卻違法</span>
+          </div>
+
+          <div class="dialogue-box">
+            <div class="dialogue-row">
+              <div class="avatar defendant">急診醫師</div>
+              <div class="bubble defendant-bubble">
+                「病患失血過多馬上要死了，走廊義工只是損失能再生的血液，保全生命遠大於抽血傷害，符合緊急避難比例原則啊！」
+              </div>
+            </div>
+            <div class="dialogue-row lawyer-row">
+              <div class="avatar lawyer">憲政學者</div>
+              <div class="bubble lawyer-bubble">
+                「憲法第一核心價值是人性尊嚴！任何人皆不可被當作救人的『工具』，手段違反人性尊嚴者，絕無阻卻違法餘地！」
+              </div>
+            </div>
+          </div>
+
+          <div class="article-box">
+            <div class="article-header">
+              <span class="article-tag">【核心爭點】</span>
+              <span class="article-name">刑法第 24 條（緊急避難手段適當性與憲法人性尊嚴）</span>
+              <button class="copy-btn" data-copy="阻卻違法實質極限：緊急避難手段限制。避難手段不得踐踏憲法人性尊嚴，強抽他人血液救人將人工具化，手段欠缺正當性，不能阻卻違法，成立強制罪與傷害罪。" title="複製法理內容">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                <span>複製法理</span>
+              </button>
+            </div>
+            <div class="article-desc">
+              <strong>【法理剖析】</strong>刑法第 24 條第 1 項緊急避難，除法益衡平外，更要求<strong>「避難手段具備實質正當性」</strong>。憲法保障之「人性尊嚴」為不可侵犯之絕對底線：人是主體而非工具。強行抽血救人將健康第三人純粹客體化、工具化，徹底破壞實質法秩序，<strong>不能阻卻違法</strong>！
+            </div>
+          </div>
+
+          <div class="review-box review-red">
+            <div class="review-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              實務與通說定論
+            </div>
+            <p>若承認抽血救人能阻卻違法，則強摘健康人腎臟救重症病患亦將合法化，文明法治將徹底崩潰。故醫師不得主張緊急避難，成立<strong>刑法強制罪與傷害罪</strong>！</p>
+          </div>
+        </article>
+
       </div>
     </section>
 
@@ -712,17 +1027,17 @@
         <div class="section-number">參</div>
         <div>
           <h2 class="section-title">綜合比較與重點速查表</h2>
-          <p class="section-desc">彙整 6 大典型抗辯事由之法條依據、法律效果與現行法適用審查狀態</p>
+          <p class="section-desc">彙整 12 大典型抗辯事由、阻卻違法及極限爭端之法條依據、法律效果與現行法審查狀態</p>
         </div>
       </div>
 
       <div class="table-card">
         <div class="table-toolbar">
           <div class="table-info">
-            共 <strong id="tableCount">6</strong> 項抗辯事由與法規範
+            共 <strong id="tableCount">12</strong> 項抗辯事由與法規範
           </div>
           <div class="table-filter-input-wrap">
-            <input type="text" id="tableFilterInput" placeholder="即時篩選表格關鍵字（例如：18條、減輕、不罰、完全適用）..." aria-label="篩選表格">
+            <input type="text" id="tableFilterInput" placeholder="即時篩選表格關鍵字（例如：櫻桃、輸血、黑白猜、義務衝突、18條、減輕、不罰）..." aria-label="篩選表格">
           </div>
         </div>
 
@@ -730,13 +1045,14 @@
           <table class="law-table" id="lawTable">
             <thead>
               <tr>
-                <th scope="col" style="width: 20%;">抗辯事由類型</th>
+                <th scope="col" style="width: 18%;">抗辯/爭點類型</th>
                 <th scope="col" style="width: 22%;">法條依據 / 概念</th>
-                <th scope="col" style="width: 32%;">法律效果與原理</th>
+                <th scope="col" style="width: 34%;">法律效果與實質原理</th>
                 <th scope="col" style="width: 26%;">現行適用狀態審查</th>
               </tr>
             </thead>
             <tbody>
+              <!-- 阻卻罪責篇 -->
               <tr>
                 <td class="fw-bold">欠缺不法意識</td>
                 <td><span class="code-badge">刑法第 16 條</span></td>
@@ -769,9 +1085,46 @@
               </tr>
               <tr>
                 <td class="fw-bold">欠缺期待可能性</td>
-                <td><span class="code-badge">超法定阻卻罪責事由</span></td>
+                <td><span class="code-badge">超法定阻卻罪責</span></td>
                 <td>客觀無法期待行為人為適法行為，阻卻罪責。</td>
-                <td><span class="table-tag tag-green">完全適用</span> 現代實質罪責論之核心思想。</td>
+                <td><span class="table-tag tag-green">完全適用</span> 現代實質規範罪責論黃金核心。</td>
+              </tr>
+              <!-- 阻卻違法與實質極限篇 -->
+              <tr>
+                <td class="fw-bold">依法令之行為</td>
+                <td><span class="code-badge">刑法第 21 條第 1 項</span></td>
+                <td>符合特別法令（如《優生保健法》墮胎）不罰。</td>
+                <td><span class="table-tag tag-green">完全適用</span> 特別法優先，法秩序不相矛盾。</td>
+              </tr>
+              <tr>
+                <td class="fw-bold">依命令之行為</td>
+                <td><span class="code-badge">刑法第 21 條第 2 項</span></td>
+                <td>公務員執行合法命令不罰；但明知命令違法者不在此限。</td>
+                <td><span class="table-tag tag-green">完全適用</span> 兼顧行政服從與反抗盲從犯罪。</td>
+              </tr>
+              <tr>
+                <td class="fw-bold">得被害人承諾</td>
+                <td><span class="code-badge">超法定阻卻違法（黑白猜）</span></td>
+                <td>真摯自主處分個人法益且未背離公序良俗者阻卻違法。</td>
+                <td><span class="table-tag tag-green">完全適用</span> 尊重自主決定權，生命法益除外。</td>
+              </tr>
+              <tr>
+                <td class="fw-bold">義務衝突</td>
+                <td><span class="code-badge">超法定阻卻違法（火海救子）</span></td>
+                <td>等價義務無法兩全，真誠履行其一即阻卻另一不作為違法。</td>
+                <td><span class="table-tag tag-green">完全適用</span> 法諺：法律不強人所難。</td>
+              </tr>
+              <tr>
+                <td class="fw-bold">正當防衛之極限</td>
+                <td><span class="code-badge">刑法第 23 條（櫻桃案）</span></td>
+                <td>生命與微小財產過度失衡，屬「權利濫用」，不能阻卻違法。</td>
+                <td><span class="table-tag tag-red">不得阻卻違法</span> 莊主依法成立殺人罪。</td>
+              </tr>
+              <tr>
+                <td class="fw-bold">緊急避難之極限</td>
+                <td><span class="code-badge">刑法第 24 條（輸血案）</span></td>
+                <td>手段違背憲法「人性尊嚴」核心（將人工具化），不能阻卻違法。</td>
+                <td><span class="table-tag tag-red">不得阻卻違法</span> 醫師成立強制罪與傷害罪。</td>
               </tr>
             </tbody>
           </table>
@@ -880,7 +1233,7 @@
           <span class="group-title">快速導覽</span>
           <a href="#section-video">🎬 影音動態微課</a>
           <a href="#section-core">核心法律思維</a>
-          <a href="#section-cases">6大抗辯案例</a>
+          <a href="#section-cases">12大經典案例</a>
           <a href="#section-table">綜合速查表</a>
           <a href="#section-summary">最新修法總結</a>
           <a href="#section-quiz">法學觀念測驗</a>

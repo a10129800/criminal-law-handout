@@ -101,10 +101,10 @@ function initCaseFilters() {
     }
 
     caseCards.forEach(card => {
-      const cardCategory = card.dataset.category;
+      const cardCategories = (card.dataset.category || '').split(' ');
       const cardText = card.textContent.toLowerCase();
 
-      const matchCategory = (activeCategory === 'all') || (cardCategory === activeCategory);
+      const matchCategory = (activeCategory === 'all') || cardCategories.includes(activeCategory);
       const matchSearch = !query || cardText.includes(query);
 
       if (matchCategory && matchSearch) {
@@ -549,6 +549,78 @@ function initVideoPlayer() {
           tags: ['全篇總結', '法理沉澱', '法治展望']
         }
       ]
+    },
+
+    cases: {
+      id: 'cases',
+      title: '⚔️ 經典案例特輯',
+      totalSec: 450, // 07:30
+      chapters: [
+        {
+          index: 1,
+          title: '黑白猜打巴掌案：得被害人承諾與公序良俗',
+          topic: '超法定阻卻違法・被害人處分權',
+          durationSec: 105,
+          durationText: '01:45',
+          icon: '✌️',
+          box1Title: '客觀傷害該當？（§277 I）',
+          box1Desc: '打巴掌造成臉部紅腫疼痛，客觀上已該當傷害罪構成要件。',
+          box2Title: '超法定阻卻違法：得承諾',
+          box2Desc: '處分個人非生命法益、處分意思真摯自由，且未悖於公序良俗，排除實質不法。',
+          takeaway: '只要個人具處分權且未違反善良風俗，法律尊重法益主體自主決定！',
+          subtitle: '朋友玩黑白猜打巴掌，雖該當傷害罪構成要件，但因得被害人承諾且未背離善良風俗，阻卻違法！',
+          voiceText: '朋友聚會玩黑白猜猜輸被打巴掌，會構成傷害罪嗎？客觀上造成疼痛確實該當傷害罪構成要件。但刑法承認超法定阻卻違法事由：得被害人承諾。在個人自主權範圍內，每個人有權處分輕微身體法益。只要出於真摯自由的承諾且未悖於善良風俗，法律就會排除實質不法性而阻卻違法！',
+          tags: ['黑白猜', '得被害人承諾', '超法定事由', '公序良俗']
+        },
+        {
+          index: 2,
+          title: '櫻桃案：正當防衛與權利濫用之極限',
+          topic: '防衛權之法律倫理限制・法益極端懸殊',
+          durationSec: 120,
+          durationText: '02:00',
+          icon: '🍒',
+          box1Title: '莊主抗辯：開槍為唯一防衛手段？',
+          box1Desc: '坐輪椅莊主因行動不便無法追趕，開槍射殺偷櫻桃童，主張刑法§23未明文法益衡平。',
+          box2Title: '實質不法排除：權利濫用禁止！',
+          box2Desc: '防衛手段與保全法益極度懸殊（拿生命換一顆櫻桃），違反法秩序目的，不能阻卻違法！',
+          takeaway: '正當防衛不得違背法秩序實質目的！法益極度失衡構成權利濫用，成立殺人罪！',
+          subtitle: '老莊主開槍擊斃偷採櫻桃之小學生，生命法益與微小財產過度失衡，構成權利濫用，不能阻卻違法！',
+          voiceText: '坐輪椅的莊主看見小學生偷摘櫻桃，因追不上竟開槍將其擊斃。莊主抗辯正當防衛未要求法益衡平，這能成立嗎？答案是絕對不行！現代刑法強調正當防衛基礎在於法秩序防衛，任何權利行使都不得違反法秩序目的。當防衛手段與保全法益極度顯著失衡時，構成權利濫用，絕不能阻卻違法，成立殺人罪！',
+          tags: ['櫻桃案', '正當防衛極限', '權利濫用', '生命vs財產']
+        },
+        {
+          index: 3,
+          title: '強抽輸血案：緊急避難與人性尊嚴絕對底線',
+          topic: '避難手段正當性・憲法最高價值不可工具化',
+          durationSec: 120,
+          durationText: '02:00',
+          icon: '🩸',
+          box1Title: '醫師抗辯：法益衡平（生命 > 血液）',
+          box1Desc: '急診病患命危，血庫見底，強抽走廊拒絕之健康志工血液救活病患，主張§24避難利益大於侵害。',
+          box2Title: '人性尊嚴核心：人不是救人的工具！',
+          box2Desc: '避難手段違反憲法核心「人性尊嚴」，將無辜第三人身體客體化、工具化，不能阻卻違法！',
+          takeaway: '避難手段必須符合實質正當性！任何人均不得被當作犧牲工具，成立強制與傷害罪！',
+          subtitle: '醫師強抽義工血液救命危病患，雖保全生命，但手段嚴重踐踏人性尊嚴將人工具化，不能阻卻違法！',
+          voiceText: '急診病患命危血庫空了，醫師強行命人壓制走廊上拒絕抽血的健康義工，強抽血液救活了病人。醫師主張保全法益大於侵害法益符合緊急避難，能阻卻違法嗎？實務通說一致認為不能！因為避難手段必須合乎憲法整體秩序，人性尊嚴是最高價值，人絕不能被當作救人的工具。侵害身體自主與人性尊嚴之手段，不能阻卻違法！',
+          tags: ['輸血案', '緊急避難極限', '人性尊嚴', '不可工具化']
+        },
+        {
+          index: 4,
+          title: '火海救子案：義務衝突與法律不強人所難',
+          topic: '超法定阻卻違法・等價義務衝突',
+          durationSec: 105,
+          durationText: '01:45',
+          icon: '🔥',
+          box1Title: '保證人地位與雙重救助義務',
+          box1Desc: '父親面對兩子陷火窟，客觀上時間與體力僅能抱出一人，未救次子致死該當不作為殺人？',
+          box2Title: '超法定阻卻違法：義務衝突',
+          box2Desc: '數個等價作為義務無法兼顧，履行其一即阻卻另一不作為之違法。「法律不強人所難！」',
+          takeaway: '客觀不能兩全時，真誠履行等價義務之一即阻卻違法！刑法不要求人成為超人！',
+          subtitle: '兩子同困火海父親只能救一人，等價作為義務衝突下，真誠履行其一即可阻卻不作為違法！',
+          voiceText: '民宅大火兩子受困不同房間，父親衝入火海只有能力救一人，父親抱出長子次子不幸罹難。父親未救次子有罪嗎？刑法承認超法定阻卻違法事由：義務衝突。當客觀上數個等價義務無法同時履行時，只要真誠履行其中一項，法律即阻卻被迫放棄之另一不作為違法性。法諺有云：法律不強人所難，刑法絕不要求人在絕境中當超人！',
+          tags: ['火海救子', '義務衝突', '超法定事由', '法律不強人所難']
+        }
+      ]
     }
   };
 
@@ -647,16 +719,19 @@ function initVideoPlayer() {
       if (levelKey === 'beginner') posterBadge.textContent = '🌱 初級生活情境入門篇';
       else if (levelKey === 'intermediate') posterBadge.textContent = '⚖️ 中級國考體系精講篇';
       else if (levelKey === 'advanced') posterBadge.textContent = '🏛️ 高級法學深究憲判篇';
+      else if (levelKey === 'cases') posterBadge.textContent = '⚔️ 經典案例特輯篇';
     }
     if (posterTitle) {
       if (levelKey === 'beginner') posterTitle.textContent = '做了一件壞事 ＝ 這個人一定是壞人嗎？';
       else if (levelKey === 'intermediate') posterTitle.textContent = '德日三階論與「不法推定罪責」兩階段架構';
       else if (levelKey === 'advanced') posterTitle.textContent = '規範罪責論演進與2022年刑法§87重大革新';
+      else if (levelKey === 'cases') posterTitle.textContent = '阻卻違法之爭議與實質極限（櫻桃案・輸血案）';
     }
     if (posterSubtitle) {
       if (levelKey === 'beginner') posterSubtitle.textContent = '生活實例劇場帶您看懂「不法推定罪責」兩階段判斷！';
       else if (levelKey === 'intermediate') posterSubtitle.textContent = '六大抗辯條文深度剖析與實務三段論答題！';
       else if (levelKey === 'advanced') posterSubtitle.textContent = '實質罪責原則、民法18歲成年與少事法曝險行政先行！';
+      else if (levelKey === 'cases') posterSubtitle.textContent = '黑白猜得承諾、火海救子義務衝突、正當防衛與緊急避難之實質底線！';
     }
     if (videoPosterOverlay) {
       videoPosterOverlay.classList.remove('hidden');
