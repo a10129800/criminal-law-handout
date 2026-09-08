@@ -1783,16 +1783,16 @@ body {
   margin-left: 4px;
 }
 
-/* 中央動態畫布 */
+/* 中央動態畫布 (16:9 純淨視訊舞台) */
 .stage-canvas {
-  flex: 1;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  position: relative;
+  overflow: hidden;
+  background: #020617;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px 30px;
-  position: relative;
-  overflow: hidden;
-  min-height: 380px;
 }
 
 .video-canvas-element {
@@ -1800,9 +1800,50 @@ body {
   inset: 0;
   width: 100%;
   height: 100%;
+  object-fit: cover;
   z-index: 1;
-  pointer-events: none;
-  opacity: 0.88;
+}
+
+.live-status-pill {
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #cbd5e1;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.25s ease;
+}
+
+.live-status-pill.playing {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.5);
+  color: #fca5a5;
+}
+
+.live-status-pill.playing::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #ef4444;
+  box-shadow: 0 0 8px #ef4444;
+  animation: liveBlink 1.2s infinite ease-in-out;
+}
+
+.video-slide-notes {
+  background: rgba(15, 23, 42, 0.5);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 18px 20px;
+}
+
+.video-slide-notes .motion-card {
+  max-width: 100%;
+  box-shadow: none;
+  background: rgba(30, 41, 59, 0.5);
 }
 
 /* 影片大封面播放按鈕蒙版 (點擊即播) */

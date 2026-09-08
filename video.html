@@ -152,6 +152,7 @@
             <div class="stage-tag-group">
               <span class="stage-badge-level" id="stageLevelBadge">🌱 初級生活情境版</span>
               <span class="stage-badge-chap" id="stageChapBadge">分鏡 1 / 4</span>
+              <span class="live-status-pill" id="liveStatusPill">⏸ 點擊播放</span>
             </div>
             <div class="stage-voice-indicator" id="voiceIndicator" title="語音導覽狀態">
               <span class="sound-wave"></span>
@@ -164,12 +165,7 @@
           <!-- 視覺畫布層與大播放按鈕蒙版 -->
           <div class="stage-canvas" id="stageCanvas">
             <!-- 動態 Canvas 繪製動態視訊效果 -->
-            <canvas id="videoCanvas" width="960" height="420" class="video-canvas-element"></canvas>
-
-            <!-- 視訊卡片內容展示 (與 Canvas 雙層融合) -->
-            <div class="motion-card" id="motionCard">
-              <!-- 動態注入內容 -->
-            </div>
+            <canvas id="videoCanvas" width="960" height="540" class="video-canvas-element"></canvas>
 
             <!-- 大封面播放按鈕蒙版 (點擊直接開始播放影片) -->
             <div class="video-poster-overlay" id="videoPosterOverlay">
@@ -234,6 +230,13 @@
                 </button>
               </div>
             </div>
+          </div>
+        </div>
+
+        <!-- 視訊下方分鏡重點速讀卡 (Note Cards Below Video) -->
+        <div class="video-slide-notes" id="videoSlideNotes">
+          <div class="motion-card" id="motionCard">
+            <!-- 動態注入內容 -->
           </div>
         </div>
       </div>

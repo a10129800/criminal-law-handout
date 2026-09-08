@@ -307,6 +307,7 @@ function initShortcuts() {
         searchInput.focus();
       }
     }
+  });
 }
 
 /* =========================================================
@@ -592,6 +593,7 @@ function initVideoPlayer() {
   const posterTitle = document.getElementById('posterTitle');
   const posterSubtitle = document.getElementById('posterSubtitle');
   const videoCanvas = document.getElementById('videoCanvas');
+  const liveStatusPill = document.getElementById('liveStatusPill');
 
   // 啟動 Canvas 動態視訊渲染引擎
   if (videoCanvas) {
@@ -642,6 +644,10 @@ function initVideoPlayer() {
     }
     if (videoPosterOverlay) {
       videoPosterOverlay.classList.remove('hidden');
+    }
+    if (liveStatusPill) {
+      liveStatusPill.textContent = '⏸ 點擊播放';
+      liveStatusPill.classList.remove('playing');
     }
 
     // 渲染右側章節目錄清單
@@ -771,15 +777,30 @@ function initVideoPlayer() {
     if (iconPlay) iconPlay.style.display = 'none';
     if (iconPause) iconPause.style.display = 'block';
     if (videoPosterOverlay) videoPosterOverlay.classList.add('hidden');
+    if (liveStatusPill) {
+      liveStatusPill.textContent = '● 播放中 (LIVE)';
+      liveStatusPill.classList.add('playing');
+    }
 
+    playIntroChime();
     playSpeechForCurrentChapter();
     startProgressTimer();
+
+    const currentLevelData = videoData[currentLevelKey];
+    const chap = currentLevelData ? currentLevelData.chapters[currentChapterIndex] : null;
+    if (chap) {
+      showToast(`▶️ 正在播放：${chap.title}`);
+    }
   }
 
   function pauseVideo() {
     isPlaying = false;
     if (iconPlay) iconPlay.style.display = 'block';
     if (iconPause) iconPause.style.display = 'none';
+    if (liveStatusPill) {
+      liveStatusPill.textContent = '⏸ 點擊播放';
+      liveStatusPill.classList.remove('playing');
+    }
 
     stopSpeech();
     stopProgressTimer();
@@ -888,6 +909,9 @@ function initVideoPlayer() {
         }
       };
 
+      if (window.speechSynthesis.paused) {
+        window.speechSynthesis.resume();
+      }
       window.speechSynthesis.speak(utterance);
     } catch (e) {
       console.warn('Speech synthesis not available or blocked:', e);
@@ -1046,23 +1070,29 @@ function initVideoPlayer() {
       });
     }
 
-    // 首頁快捷觀看按鈕
+    // 首頁快捷觀看按鈕 (直接同步觸發播放，避免 setTimeout 導致瀏覽器阻止語音)
     if (heroWatchVideoBtn) {
       heroWatchVideoBtn.addEventListener('click', (e) => {
-        const secVideo = document.getElementById('section-video');
+        e.preventDefault();
+        playVideo();
+        const secVideo = document.getElementById('section-video') || document.getElementById('videoPlayerContainer');
         if (secVideo) {
-          e.preventDefault();
-          secVideo.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          setTimeout(() => {
-            if (!isPlaying) playVideo();
-          }, 500);
+          secVideo.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
       });
     }
 
-    // 大封面播放鈕點擊播放
+    // 大封面播放鈕點擊播放 (直接同步觸發)
     if (videoPosterOverlay) {
-      videoPosterOverlay.addEventListener('click', () => {
+      videoPosterOverlay.addEventListener('click', (e) => {
+        e.stopPropagation();
+        playVideo();
+      });
+    }
+
+    if (bigPlayBtn) {
+      bigPlayBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
         playVideo();
       });
     }
@@ -1147,24 +1177,46 @@ function initVideoPlayer() {
     }
   }
 
+  /* --- 播放點擊立體聲提示音 (Web Audio API) --- */
+  function playIntroChime() {
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      const audioCtx = new AudioCtx();
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(659.25, audioCtx.currentTime + 0.12);
+      gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.35);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.35);
+    } catch (e) {}
+  }
+
   /* --- 動態 Canvas 60fps 視訊渲染引擎 --- */
   function initCanvasMotion(canvas) {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let animFrameId = null;
     let tick = 0;
 
     // 粒子系統
     const particles = [];
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < 35; i++) {
       particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        radius: Math.random() * 2 + 1,
-        vx: (Math.random() - 0.5) * 0.6,
-        vy: (Math.random() - 0.5) * 0.6,
-        alpha: Math.random() * 0.5 + 0.2
+        radius: Math.random() * 2.5 + 1,
+        vx: (Math.random() - 0.5) * 0.7,
+        vy: (Math.random() - 0.5) * 0.7,
+        alpha: Math.random() * 0.6 + 0.2
       });
     }
 
@@ -1172,42 +1224,43 @@ function initVideoPlayer() {
       tick++;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+      const W = canvas.width;
+      const H = canvas.height;
+      const currentLevelData = videoData[currentLevelKey];
+      const chap = currentLevelData ? currentLevelData.chapters[currentChapterIndex] : null;
+
       // 1. 深色劇院背景
-      const grad = ctx.createRadialGradient(
-        canvas.width / 2, canvas.height / 2, 20,
-        canvas.width / 2, canvas.height / 2, canvas.width / 1.4
-      );
-      grad.addColorStop(0, '#1e293b');
-      grad.addColorStop(0.5, '#0f172a');
+      const grad = ctx.createRadialGradient(W / 2, H / 2, 30, W / 2, H / 2, W / 1.3);
+      grad.addColorStop(0, '#0f172a');
+      grad.addColorStop(0.6, '#090d16');
       grad.addColorStop(1, '#020617');
       ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillRect(0, 0, W, H);
 
-      // 2. 背景律法幾何微光格網
-      ctx.strokeStyle = 'rgba(59, 130, 246, 0.05)';
+      // 2. 律法透視格網線
+      ctx.strokeStyle = 'rgba(59, 130, 246, 0.07)';
       ctx.lineWidth = 1;
-      const gridSize = 40;
-      for (let x = 0; x < canvas.width; x += gridSize) {
+      for (let x = 0; x < W; x += 50) {
         ctx.beginPath();
         ctx.moveTo(x, 0);
-        ctx.lineTo(x, canvas.height);
+        ctx.lineTo(x, H);
         ctx.stroke();
       }
-      for (let y = 0; y < canvas.height; y += gridSize) {
+      for (let y = 0; y < H; y += 50) {
         ctx.beginPath();
         ctx.moveTo(0, y);
-        ctx.lineTo(canvas.width, y);
+        ctx.lineTo(W, y);
         ctx.stroke();
       }
 
-      // 3. 浮動粒子動態
+      // 3. 浮動金色微粒
       particles.forEach(p => {
         p.x += p.vx;
         p.y += p.vy;
-        if (p.x < 0) p.x = canvas.width;
-        if (p.x > canvas.width) p.x = 0;
-        if (p.y < 0) p.y = canvas.height;
-        if (p.y > canvas.height) p.y = 0;
+        if (p.x < 0) p.x = W;
+        if (p.x > W) p.x = 0;
+        if (p.y < 0) p.y = H;
+        if (p.y > H) p.y = 0;
 
         ctx.fillStyle = `rgba(245, 158, 11, ${p.alpha})`;
         ctx.beginPath();
@@ -1215,74 +1268,166 @@ function initVideoPlayer() {
         ctx.fill();
       });
 
-      // 4. 動態法學天秤圖徽 (Swaying Scales of Justice)
-      const centerX = canvas.width / 2;
-      const centerY = canvas.height / 2;
-      const swayAngle = Math.sin(tick * 0.03) * 0.08;
+      // 4. 左側動態黃金天秤 (Swaying Scales of Justice)
+      const scaleX = W * 0.22;
+      const scaleY = H * 0.52;
+      const swayAngle = Math.sin(tick * 0.04) * 0.07;
 
       ctx.save();
-      ctx.translate(centerX, centerY - 20);
+      ctx.translate(scaleX, scaleY - 30);
       ctx.rotate(swayAngle);
 
-      // 主橫梁
+      // 橫梁
       ctx.strokeStyle = '#f59e0b';
-      ctx.lineWidth = 4;
+      ctx.lineWidth = 5;
       ctx.beginPath();
-      ctx.moveTo(-90, 0);
-      ctx.lineTo(90, 0);
+      ctx.moveTo(-75, 0);
+      ctx.lineTo(75, 0);
       ctx.stroke();
 
-      // 左右秤盤吊線
+      // 左右吊線與盤
       ctx.lineWidth = 2;
-      ctx.strokeStyle = 'rgba(245, 158, 11, 0.7)';
-      // 左秤盤
+      ctx.strokeStyle = 'rgba(251, 191, 36, 0.8)';
+      // 左
       ctx.beginPath();
-      ctx.moveTo(-90, 0);
-      ctx.lineTo(-90, 50);
+      ctx.moveTo(-75, 0);
+      ctx.lineTo(-75, 45);
+      ctx.stroke();
+      ctx.fillStyle = 'rgba(245, 158, 11, 0.25)';
+      ctx.beginPath();
+      ctx.arc(-75, 45, 20, 0, Math.PI);
+      ctx.fill();
+      ctx.stroke();
+      // 右
+      ctx.beginPath();
+      ctx.moveTo(75, 0);
+      ctx.lineTo(75, 45);
       ctx.stroke();
       ctx.beginPath();
-      ctx.arc(-90, 50, 22, 0, Math.PI);
-      ctx.stroke();
-      // 右秤盤
-      ctx.beginPath();
-      ctx.moveTo(90, 0);
-      ctx.lineTo(90, 50);
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.arc(90, 50, 22, 0, Math.PI);
+      ctx.arc(75, 45, 20, 0, Math.PI);
+      ctx.fill();
       ctx.stroke();
 
       ctx.restore();
 
-      // 中央主立柱
+      // 中央立柱
       ctx.strokeStyle = '#d97706';
-      ctx.lineWidth = 4;
+      ctx.lineWidth = 5;
       ctx.beginPath();
-      ctx.moveTo(centerX, centerY - 40);
-      ctx.lineTo(centerX, centerY + 60);
+      ctx.moveTo(scaleX, scaleY - 50);
+      ctx.lineTo(scaleX, scaleY + 55);
       ctx.stroke();
       // 基座
-      ctx.beginPath();
-      ctx.moveTo(centerX - 35, centerY + 60);
-      ctx.lineTo(centerX + 35, centerY + 60);
-      ctx.stroke();
+      ctx.fillStyle = '#d97706';
+      ctx.fillRect(scaleX - 30, scaleY + 55, 60, 10);
 
-      // 5. 播放中光波特效
-      if (isPlaying) {
-        const pulse = (Math.sin(tick * 0.08) + 1) * 0.5;
-        ctx.strokeStyle = `rgba(16, 185, 129, ${0.25 * pulse})`;
-        ctx.lineWidth = 3;
+      // 5. 右側大字分鏡內容繪製 (直接繪製於視訊畫面上)
+      if (chap) {
+        ctx.save();
+        // 級別與分鏡編號標籤
+        ctx.font = 'bold 15px "Noto Sans TC", sans-serif';
+        ctx.fillStyle = '#60a5fa';
+        ctx.fillText(`【${currentLevelData.title}】 第 ${chap.index} 幕 / 共 ${currentLevelData.chapters.length} 幕`, W * 0.42, H * 0.28);
+
+        // 主標題
+        ctx.font = 'bold 26px "Noto Serif TC", serif';
+        ctx.fillStyle = '#ffffff';
+        ctx.shadowColor = 'rgba(59, 130, 246, 0.6)';
+        ctx.shadowBlur = 10;
+        ctx.fillText(chap.title, W * 0.42, H * 0.38);
+        ctx.shadowBlur = 0;
+
+        // 核心法理小標
+        ctx.font = '600 16px "Noto Sans TC", sans-serif';
+        ctx.fillStyle = '#fbbf24';
+        ctx.fillText(`✦ 核心焦點：${chap.topic}`, W * 0.42, H * 0.47);
+
+        // 兩大要點卡 (繪製模擬視訊圖卡)
+        // 卡片 1
+        ctx.fillStyle = 'rgba(30, 41, 59, 0.75)';
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+        ctx.lineWidth = 1;
         ctx.beginPath();
-        ctx.arc(centerX, centerY, 80 + pulse * 40, 0, Math.PI * 2);
+        if (ctx.roundRect) {
+          ctx.roundRect(W * 0.42, H * 0.53, W * 0.26, 90, 8);
+        } else {
+          ctx.rect(W * 0.42, H * 0.53, W * 0.26, 90);
+        }
+        ctx.fill();
         ctx.stroke();
+
+        ctx.font = 'bold 14px "Noto Sans TC", sans-serif';
+        ctx.fillStyle = '#93c5fd';
+        ctx.fillText(`① ${chap.box1Title.substring(0, 11)}`, W * 0.435, H * 0.59);
+        ctx.font = '13px "Noto Sans TC", sans-serif';
+        ctx.fillStyle = '#cbd5e1';
+        ctx.fillText(chap.box1Desc.substring(0, 16) + '...', W * 0.435, H * 0.66);
+
+        // 卡片 2
+        ctx.fillStyle = 'rgba(30, 41, 59, 0.75)';
+        ctx.beginPath();
+        if (ctx.roundRect) {
+          ctx.roundRect(W * 0.70, H * 0.53, W * 0.26, 90, 8);
+        } else {
+          ctx.rect(W * 0.70, H * 0.53, W * 0.26, 90);
+        }
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.font = 'bold 14px "Noto Sans TC", sans-serif';
+        ctx.fillStyle = '#fbbf24';
+        ctx.fillText(`② ${chap.box2Title.substring(0, 11)}`, W * 0.715, H * 0.59);
+        ctx.font = '13px "Noto Sans TC", sans-serif';
+        ctx.fillStyle = '#cbd5e1';
+        ctx.fillText(chap.box2Desc.substring(0, 16) + '...', W * 0.715, H * 0.66);
+
+        // 核心金句 Takeaway 條
+        ctx.fillStyle = 'rgba(16, 185, 129, 0.18)';
+        ctx.strokeStyle = 'rgba(16, 185, 129, 0.4)';
+        ctx.beginPath();
+        if (ctx.roundRect) {
+          ctx.roundRect(W * 0.42, H * 0.74, W * 0.54, 38, 6);
+        } else {
+          ctx.rect(W * 0.42, H * 0.74, W * 0.54, 38);
+        }
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.font = 'bold 13px "Noto Sans TC", sans-serif';
+        ctx.fillStyle = '#6ee7b7';
+        ctx.fillText(`💡 核心精要：${chap.takeaway.substring(0, 30)}...`, W * 0.435, H * 0.79);
+        ctx.restore();
       }
 
-      // 6. 右上角電視台微課浮水印
-      ctx.font = '600 13px "Noto Sans TC", sans-serif';
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
-      ctx.fillText('⚖️ 刑法微課 • 4K LegalTech', canvas.width - 190, 28);
+      // 6. 音波動畫 (Dancing Equalizer Bars at bottom)
+      const eqX = W - 145;
+      const eqY = H - 28;
+      for (let i = 0; i < 10; i++) {
+        const barH = isPlaying ? Math.sin(tick * 0.2 + i * 0.8) * 12 + 16 : 4;
+        ctx.fillStyle = isPlaying ? '#10b981' : '#64748b';
+        ctx.fillRect(eqX + i * 11, eqY - barH, 6, barH);
+      }
 
-      animFrameId = requestAnimationFrame(renderLoop);
+      // 7. 頂部狀態列
+      ctx.font = 'bold 12px "JetBrains Mono", monospace';
+      if (isPlaying) {
+        ctx.fillStyle = '#ef4444';
+        ctx.beginPath();
+        ctx.arc(30, 26, 5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#ffffff';
+        ctx.fillText('REC • 60FPS HD', 44, 30);
+      } else {
+        ctx.fillStyle = '#94a3b8';
+        ctx.fillText('⏸ STANDBY', 30, 30);
+      }
+
+      // 水印
+      ctx.font = 'bold 13px "Noto Sans TC", sans-serif';
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
+      ctx.fillText('⚖️ 刑法微課 • 4K LegalTech', W - 195, 30);
+
+      requestAnimationFrame(renderLoop);
     }
 
     renderLoop();
