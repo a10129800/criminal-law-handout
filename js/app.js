@@ -567,7 +567,9 @@ function initVideoPlayer() {
   const stageChapBadge = document.getElementById('stageChapBadge');
   const voiceIndicator = document.getElementById('voiceIndicator');
   const motionCard = document.getElementById('motionCard');
+  const subtitlesPanel = document.getElementById('subtitlesPanel');
   const subtitleText = document.getElementById('subtitleText');
+  const subtitleBadge = document.querySelector('.subtitle-badge');
   const videoProgressBar = document.getElementById('videoProgressBar');
   const videoProgressContainer = document.getElementById('videoProgressContainer');
   const playToggleBtn = document.getElementById('playToggleBtn');
@@ -595,50 +597,19 @@ function initVideoPlayer() {
   const videoCanvas = document.getElementById('videoCanvas');
   const liveStatusPill = document.getElementById('liveStatusPill');
 
-  // 擬真人聲設定相關 DOM 元素
-  const voiceSettingsBtn = document.getElementById('voiceSettingsBtn');
-  const voiceSettingsModal = document.getElementById('voiceSettingsModal');
-  const voiceModalCloseBtn = document.getElementById('voiceModalCloseBtn');
-  const voicePersonaBtns = document.querySelectorAll('.voice-persona-btn');
-  const voiceSelectDropdown = document.getElementById('voiceSelectDropdown');
-  const currentVoiceBadge = document.getElementById('currentVoiceBadge');
-  const voicePitchRange = document.getElementById('voicePitchRange');
-  const voicePitchVal = document.getElementById('voicePitchVal');
-  const voiceSpeedRange = document.getElementById('voiceSpeedRange');
-  const voiceSpeedVal = document.getElementById('voiceSpeedVal');
-  const voiceNaturalPauseCheckbox = document.getElementById('voiceNaturalPauseCheckbox');
-  const voicePreviewBtn = document.getElementById('voicePreviewBtn');
-  const voicePreviewBtnText = document.getElementById('voicePreviewBtnText');
-  const voicePreviewStatus = document.getElementById('voicePreviewStatus');
-  const voiceResetBtn = document.getElementById('voiceResetBtn');
-  const voiceSaveBtn = document.getElementById('voiceSaveBtn');
+  // 語音指示器標籤
   const voiceIndicatorText = document.getElementById('voiceIndicatorText');
 
-  // 語音設定狀態
-  const DEFAULT_VOICE_SETTINGS = {
-    persona: 'auto',
-    voiceURI: '',
-    pitch: 1.0,
-    rate: 1.0,
-    naturalPauses: true
-  };
+  // 即時字幕與單一自然語音狀態
+  let singleBestVoice = null;
+  let currentChapterSentences = [];
+  let currentSentenceIndex = 0;
 
-  let voiceSettings = { ...DEFAULT_VOICE_SETTINGS };
-  try {
-    const savedVoiceConf = localStorage.getItem('criminal_law_voice_settings');
-    if (savedVoiceConf) {
-      voiceSettings = { ...DEFAULT_VOICE_SETTINGS, ...JSON.parse(savedVoiceConf) };
-    }
-  } catch (e) {
-    console.warn('Failed to load voice settings from localStorage:', e);
-  }
-
-  // 隊列播放器狀態
+  // 語音隊列播放器狀態（保證單一語音流，杜絕重疊）
   let speechQueue = [];
   let speechQueueIndex = 0;
   let isSpeakingQueue = false;
   let speechPauseTimer = null;
-  let isPreviewMode = false;
 
   // 啟動 Canvas 動態視訊渲染引擎
   if (videoCanvas) {
@@ -778,9 +749,21 @@ function initVideoPlayer() {
       </div>
     `;
 
-    // 更新字幕
-    if (subtitleText) {
-      subtitleText.textContent = chap.subtitle;
+    // 更新即時字幕內容為本分鏡句子序列之開頭或焦點
+    const sentences = getChapterSentences(chap.voiceText);
+    currentChapterSentences = sentences;
+    currentSentenceIndex = 0;
+
+    if (isPlaying) {
+      updateSubtitleUI(sentences[0], 0, sentences.length);
+    } else {
+      if (subtitleText) {
+        subtitleText.textContent = `【本幕焦點】${chap.subtitle}`;
+      }
+      const subtitleBadge = document.querySelector('.subtitle-badge');
+      if (subtitleBadge) {
+        subtitleBadge.textContent = '即時旁白字幕 • 準備播放';
+      }
     }
 
     // 更新右側選中高亮
@@ -828,7 +811,7 @@ function initVideoPlayer() {
     }
 
     playIntroChime();
-    playSpeechForCurrentChapter();
+    playSpeechForCurrentChapter(currentSentenceIndex);
     startProgressTimer();
 
     const currentLevelData = videoData[currentLevelKey];
@@ -852,9 +835,14 @@ function initVideoPlayer() {
     if (voiceIndicator) {
       voiceIndicator.classList.remove('speaking');
     }
+
+    const badge = document.querySelector('.subtitle-badge');
+    if (badge && currentChapterSentences.length > 0) {
+      badge.innerHTML = `即時旁白字幕 • 第 ${currentSentenceIndex + 1} / ${currentChapterSentences.length} 句 (已暫停)`;
+    }
   }
 
-  /* --- 計時器與進度條更新 --- */
+  /* --- 計時器與進度條更新（字幕自動同頻推進） --- */
   function startProgressTimer() {
     stopProgressTimer();
     const intervalMs = 1000 / currentSpeed;
@@ -872,10 +860,29 @@ function initVideoPlayer() {
           pauseVideo();
           chapterElapsedSec = 0;
           updateProgressUI();
+          if (subtitleText) {
+            subtitleText.textContent = '🎉 本系列微課已全部播映完畢！感謝研習！';
+            const badge = document.querySelector('.subtitle-badge');
+            if (badge) badge.textContent = '即時旁白字幕 • 播映完畢';
+          }
           showToast('🎉 本級別講解影片已全部播放完畢！');
         }
       } else {
         updateProgressUI();
+        // 若語音被靜音或未在隊列朗讀，由進度條按時間精準推進字幕
+        if (!voiceEnabled || !isSpeakingQueue) {
+          const sentences = getChapterSentences(chap.voiceText);
+          if (sentences.length > 0) {
+            const idx = Math.min(
+              sentences.length - 1,
+              Math.floor((chapterElapsedSec / chap.durationSec) * sentences.length)
+            );
+            if (idx !== currentSentenceIndex) {
+              currentSentenceIndex = idx;
+              updateSubtitleUI(sentences[idx], idx, sentences.length);
+            }
+          }
+        }
       }
     }, intervalMs);
   }
@@ -975,17 +982,67 @@ function initVideoPlayer() {
     return s;
   }
 
-  /* --- 語音品質加權評分演算法 --- */
+  /* --- 即時動態字幕渲染與動畫更新 --- */
+  function updateSubtitleUI(text, index, total) {
+    if (!subtitleText) return;
+    subtitleText.classList.remove('fade-in');
+    void subtitleText.offsetHeight; // trigger reflow
+    subtitleText.textContent = text;
+    subtitleText.classList.add('fade-in');
+
+    const badge = document.querySelector('.subtitle-badge');
+    if (badge) {
+      if (isPlaying) {
+        badge.innerHTML = `<span class="live-pulse-dot"></span> 即時旁白字幕 • 第 ${index + 1} / ${total} 句`;
+      } else {
+        badge.innerHTML = `即時旁白字幕 • 第 ${index + 1} / ${total} 句 (已暫停)`;
+      }
+    }
+  }
+
+  /* --- 將分鏡口播講稿切分為句意完整、節奏舒適的即時字幕陣列 --- */
+  function getChapterSentences(rawText) {
+    if (!rawText) return [];
+    const cleaned = rawText.replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, '').trim();
+    // 依句號、問號、驚嘆號或換行切分句子
+    const rawChunks = cleaned.match(/[^。！？\n]+[。！？]?/g) || [cleaned];
+    const sentences = [];
+    let buffer = '';
+
+    for (let i = 0; i < rawChunks.length; i++) {
+      const chunk = rawChunks[i].trim();
+      if (!chunk) continue;
+
+      if (buffer) {
+        buffer += chunk;
+      } else {
+        buffer = chunk;
+      }
+
+      // 若字數過少（<= 6 字且非疑問句），則與下一句合併以保持字幕節奏穩定與畫面充實
+      const isTooShort = buffer.length <= 6 && !(/[？?]/.test(buffer));
+      if (!isTooShort || i === rawChunks.length - 1) {
+        sentences.push(buffer);
+        buffer = '';
+      }
+    }
+    if (buffer) {
+      sentences.push(buffer);
+    }
+    return sentences.length > 0 ? sentences : [rawText];
+  }
+
+  /* --- 語音品質加權評分演算法（選出唯一的最佳自然中文人聲） --- */
   function scoreChineseVoice(voice) {
     let score = 0;
     const name = (voice.name || '').toLowerCase();
     const lang = (voice.lang || '').toLowerCase();
 
-    // 語言基礎分 (臺灣繁體 > 香港 > 大陸普通話 > 一般中文)
+    // 語言基礎分 (臺灣繁體優先)
     if (lang.includes('zh-tw') || lang.includes('cmn-tw')) {
-      score += 65;
+      score += 90;
     } else if (lang.includes('zh-hk')) {
-      score += 35;
+      score += 40;
     } else if (lang.includes('zh-cn') || lang.includes('cmn-cn')) {
       score += 30;
     } else if (lang.startsWith('zh')) {
@@ -994,30 +1051,26 @@ function initVideoPlayer() {
       return -999; // 非中文語音
     }
 
-    // 微軟神經網路自然人聲 (Azure Neural / Edge Natural)
+    // 微軟神經網路自然人聲 (Edge 曉臻首選)
     if (name.includes('natural') || name.includes('neural') || name.includes('online (natural)')) {
       score += 150;
     }
-
-    // 明星自然人聲加權
-    if (name.includes('hsiaochen') || name.includes('曉臻')) score += 95;
+    if (name.includes('hsiaochen') || name.includes('曉臻')) score += 120;
     if (name.includes('yunjhe') || name.includes('雲哲')) score += 95;
-    if (name.includes('xiaoxiao') || name.includes('曉曉')) score += 75;
-    if (name.includes('yunxi') || name.includes('雲希')) score += 75;
-    if (name.includes('yunjian') || name.includes('雲健')) score += 75;
+    if (name.includes('xiaoxiao') || name.includes('曉曉')) score += 70;
 
     // Google 自然雲端語音 (Chrome 內建)
     if (name.includes('google') && (lang.includes('zh-tw') || name.includes('臺灣') || name.includes('台灣'))) {
-      score += 85;
+      score += 90;
     } else if (name.includes('google')) {
       score += 50;
     }
 
     // Apple 增強版語音 (macOS / iOS)
     if (name.includes('enhanced') || name.includes('premium')) score += 60;
-    if (name.includes('mei-jia') || name.includes('sin-ji') || name.includes('ting-ting')) score += 40;
+    if (name.includes('mei-jia') || name.includes('sin-ji')) score += 40;
 
-    // 扣分項：嚴重機械音（舊版 Windows SAPI 離線語音）
+    // 扣分項：嚴重機械音（舊版 SAPI 離線語音）
     if (name.includes('desktop') || name.includes('hanhan') || name.includes('huihui') || name.includes('espeak')) {
       score -= 80;
     }
@@ -1025,139 +1078,89 @@ function initVideoPlayer() {
     return score;
   }
 
-  /* --- 取得依品質排序的中文語音清單 --- */
-  function getSortedChineseVoices() {
-    if (!('speechSynthesis' in window)) return [];
+  /* --- 取得唯一的最佳繁體中文自然語音 --- */
+  function getSingleBestVoice() {
+    if (singleBestVoice) return singleBestVoice;
+    if (!('speechSynthesis' in window)) return null;
+
     const all = window.speechSynthesis.getVoices() || [];
-    const chineseVoices = all.filter(v => {
+    const zhVoices = all.filter(v => {
       const l = (v.lang || '').toLowerCase();
       return l.startsWith('zh') || l.includes('cmn');
     });
 
-    return chineseVoices.sort((a, b) => scoreChineseVoice(b) - scoreChineseVoice(a));
-  }
-
-  /* --- 依據使用者音色風格偏好選擇最佳語音 --- */
-  function pickBestVoice() {
-    const sorted = getSortedChineseVoices();
-    if (sorted.length === 0) {
-      const all = window.speechSynthesis.getVoices() || [];
-      return all[0] || null;
+    if (zhVoices.length === 0) {
+      singleBestVoice = all[0] || null;
+      return singleBestVoice;
     }
 
-    // 若使用者指定了特定的 voiceURI，先嘗試精確比對
-    if (voiceSettings.voiceURI) {
-      const exact = sorted.find(v => v.voiceURI === voiceSettings.voiceURI || v.name === voiceSettings.voiceURI);
-      if (exact) return exact;
-    }
-
-    const persona = voiceSettings.persona || 'auto';
-
-    if (persona === 'female') {
-      const femaleKeywords = ['hsiaochen', '曉臻', 'xiaoxiao', '曉曉', '國語', 'mei-jia', 'ting-ting', 'female', '女', 'hanhan'];
-      const fVoice = sorted.find(v => {
-        const n = v.name.toLowerCase();
-        return femaleKeywords.some(k => n.includes(k));
-      });
-      if (fVoice) return fVoice;
-    } else if (persona === 'male') {
-      const maleKeywords = ['yunjhe', '雲哲', 'yunxi', '雲希', 'yunjian', '雲健', 'kangkang', 'danny', 'male', '男'];
-      const mVoice = sorted.find(v => {
-        const n = v.name.toLowerCase();
-        return maleKeywords.some(k => n.includes(k));
-      });
-      if (mVoice) return mVoice;
-    } else if (persona === 'anchor') {
-      const anchorKeywords = ['xiaoxiao', '曉曉', 'yunjian', '雲健', 'google 國語', 'hsiaochen'];
-      const aVoice = sorted.find(v => {
-        const n = v.name.toLowerCase();
-        return anchorKeywords.some(k => n.includes(k));
-      });
-      if (aVoice) return aVoice;
-    }
-
-    // 預設 (auto) 回傳評分最高的第一名自然語音
-    return sorted[0];
+    zhVoices.sort((a, b) => scoreChineseVoice(b) - scoreChineseVoice(a));
+    singleBestVoice = zhVoices[0];
+    return singleBestVoice;
   }
 
-  /* --- 依人類呼吸節奏將長篇講稿切分為微語意塊 --- */
-  function splitIntoProsodyChunks(text) {
-    const regex = /([^。！？，；：\n]+[。！？，；：\n]*)/g;
-    const matches = text.match(regex) || [text];
-    const chunks = [];
-
-    matches.forEach(m => {
-      const trimmed = m.trim();
-      if (!trimmed) return;
-
-      let pauseMs = 120; // 預設逗號氣息微停頓 (ms)
-      if (/[。！？\n]/.test(trimmed)) {
-        pauseMs = 300; // 完整句號換氣停頓
-      } else if (/[，、；：]/.test(trimmed)) {
-        pauseMs = 130; // 短暫換氣微停頓
-      }
-
-      chunks.push({
-        text: trimmed,
-        pause: pauseMs
-      });
-    });
-
-    return chunks;
-  }
-
-  /* --- 播放分鏡語音 (高擬真自然語流隊列) --- */
-  function playSpeechForCurrentChapter() {
+  /* --- 播放分鏡語音（嚴格單一語音流＋即時字幕逐句同步） --- */
+  function playSpeechForCurrentChapter(startSentenceIdx = 0) {
     stopSpeech();
+
+    const currentLevelData = videoData[currentLevelKey];
+    const chap = currentLevelData ? currentLevelData.chapters[currentChapterIndex] : null;
+    if (!chap || !chap.voiceText) return;
+
+    const targetVoice = getSingleBestVoice();
+    updateVoiceIndicatorLabel(targetVoice);
+
+    const sentences = getChapterSentences(chap.voiceText);
+    currentChapterSentences = sentences;
 
     if (!voiceEnabled || !('speechSynthesis' in window)) {
       if (voiceIndicator) {
         voiceIndicator.classList.remove('speaking');
         voiceIndicator.classList.toggle('muted', !voiceEnabled);
       }
+      const sIdx = Math.max(0, Math.min(startSentenceIdx, sentences.length - 1));
+      currentSentenceIndex = sIdx;
+      updateSubtitleUI(sentences[sIdx], sIdx, sentences.length);
       return;
     }
 
-    const chap = videoData[currentLevelKey].chapters[currentChapterIndex];
-    if (!chap || !chap.voiceText) return;
+    speechQueue = sentences.map((sent, idx) => ({
+      index: idx,
+      total: sentences.length,
+      displaySubtitle: sent,
+      spokenText: toSpokenLawText(sent)
+    }));
 
-    const spokenText = toSpokenLawText(chap.voiceText);
-    const targetVoice = pickBestVoice();
-
-    updateVoiceIndicatorLabel(targetVoice);
-
-    speechQueue = splitIntoProsodyChunks(spokenText);
-    speechQueueIndex = 0;
+    speechQueueIndex = Math.max(0, Math.min(startSentenceIdx, speechQueue.length - 1));
     isSpeakingQueue = true;
-    isPreviewMode = false;
 
-    speakNextQueueItem(targetVoice, false);
+    // 延遲 50ms 確保瀏覽器音訊通道徹底終止前一個 utterance，保證單一語音絕不重疊
+    setTimeout(() => {
+      if (isPlaying && isSpeakingQueue) {
+        speakNextQueueItem(targetVoice);
+      }
+    }, 50);
   }
 
-  /* --- 隊列逐句朗讀控制 --- */
-  function speakNextQueueItem(voice, isPreview = false) {
+  /* --- 隊列逐句朗讀控制（精準驅動字幕即時更新） --- */
+  function speakNextQueueItem(voice) {
     if (!isSpeakingQueue || speechQueueIndex >= speechQueue.length) {
       isSpeakingQueue = false;
-      if (voiceIndicator && !isPreview) {
+      if (voiceIndicator) {
         voiceIndicator.classList.remove('speaking');
-      }
-      if (isPreview && voicePreviewBtn) {
-        voicePreviewBtn.classList.remove('speaking');
-        if (voicePreviewBtnText) voicePreviewBtnText.textContent = '試聽人聲效果';
-        if (voicePreviewStatus) voicePreviewStatus.textContent = '試聽播放完成';
       }
       return;
     }
 
     const item = speechQueue[speechQueueIndex];
-    if (!item || !item.text) {
+    if (!item || !item.spokenText) {
       speechQueueIndex++;
-      speakNextQueueItem(voice, isPreview);
+      speakNextQueueItem(voice);
       return;
     }
 
     try {
-      const utterance = new SpeechSynthesisUtterance(item.text);
+      const utterance = new SpeechSynthesisUtterance(item.spokenText);
       if (voice) {
         utterance.voice = voice;
         utterance.lang = voice.lang || 'zh-TW';
@@ -1165,19 +1168,16 @@ function initVideoPlayer() {
         utterance.lang = 'zh-TW';
       }
 
-      utterance.pitch = voiceSettings.pitch;
-      const effectiveRate = Math.min(2.0, Math.max(0.6, voiceSettings.rate * currentSpeed));
+      utterance.pitch = 1.0;
+      const effectiveRate = Math.min(1.8, Math.max(0.7, 1.0 * currentSpeed));
       utterance.rate = effectiveRate;
 
       utterance.onstart = () => {
-        if (!isPreview && voiceIndicator) {
+        currentSentenceIndex = item.index;
+        updateSubtitleUI(item.displaySubtitle, item.index, item.total);
+        if (voiceIndicator) {
           voiceIndicator.classList.add('speaking');
           voiceIndicator.classList.remove('muted');
-        }
-        if (isPreview && voicePreviewBtn) {
-          voicePreviewBtn.classList.add('speaking');
-          if (voicePreviewBtnText) voicePreviewBtnText.textContent = '停止試聽';
-          if (voicePreviewStatus) voicePreviewStatus.textContent = '正在播放試聽語音...';
         }
       };
 
@@ -1186,30 +1186,26 @@ function initVideoPlayer() {
 
         speechQueueIndex++;
         if (speechQueueIndex < speechQueue.length) {
-          const pauseDuration = voiceSettings.naturalPauses ? (item.pause / effectiveRate) : 30;
+          // 自然呼吸句間停頓 (約 250ms)
+          const pauseMs = 250 / currentSpeed;
           speechPauseTimer = setTimeout(() => {
-            if (isSpeakingQueue) {
-              speakNextQueueItem(voice, isPreview);
+            if (isSpeakingQueue && isPlaying) {
+              speakNextQueueItem(voice);
             }
-          }, pauseDuration);
+          }, pauseMs);
         } else {
           isSpeakingQueue = false;
-          if (!isPreview && voiceIndicator) {
+          if (voiceIndicator) {
             voiceIndicator.classList.remove('speaking');
-          }
-          if (isPreview && voicePreviewBtn) {
-            voicePreviewBtn.classList.remove('speaking');
-            if (voicePreviewBtnText) voicePreviewBtnText.textContent = '試聽人聲效果';
-            if (voicePreviewStatus) voicePreviewStatus.textContent = '試聽播放完畢';
           }
         }
       };
 
       utterance.onerror = (err) => {
-        console.warn('Speech chunk error, skipping to next:', err);
+        console.warn('Speech sentence error, skipping:', err);
         if (!isSpeakingQueue) return;
         speechQueueIndex++;
-        speakNextQueueItem(voice, isPreview);
+        speakNextQueueItem(voice);
       };
 
       if (window.speechSynthesis.paused) {
@@ -1241,167 +1237,31 @@ function initVideoPlayer() {
     if (voiceIndicator) {
       voiceIndicator.classList.remove('speaking');
     }
-    if (voicePreviewBtn) {
-      voicePreviewBtn.classList.remove('speaking');
-      if (voicePreviewBtnText) voicePreviewBtnText.textContent = '試聽人聲效果';
-    }
   }
 
   /* --- 更新指示器上的語音名稱標籤 --- */
   function updateVoiceIndicatorLabel(voice) {
     if (!voiceIndicatorText) return;
     if (!voice) {
-      voiceIndicatorText.textContent = '系統語音';
+      voiceIndicatorText.textContent = '自然中文語音就緒';
       return;
     }
 
     const n = voice.name;
-    let label = '自然人聲';
+    let label = '自然中文語音';
     if (n.includes('HsiaoChen') || n.includes('曉臻')) {
       label = '微軟曉臻 (自然女聲)';
     } else if (n.includes('YunJhe') || n.includes('雲哲')) {
       label = '微軟雲哲 (自然男聲)';
     } else if (n.includes('Xiaoxiao') || n.includes('曉曉')) {
-      label = '微軟曉曉 (主播女聲)';
-    } else if (n.includes('Yunxi') || n.includes('雲希')) {
-      label = '微軟雲希 (自然男聲)';
+      label = '微軟曉曉 (自然人聲)';
     } else if (n.includes('Google') && (n.includes('國語') || n.includes('臺灣'))) {
       label = 'Google 國語 (自然人聲)';
-    } else if (n.includes('Natural') || n.includes('Online')) {
-      label = n.split(' ')[0] + ' (自然人聲)';
     } else {
       label = n.length > 14 ? n.substring(0, 14) + '...' : n;
     }
 
     voiceIndicatorText.textContent = label;
-  }
-
-  /* --- 填充並更新聲音設定下拉選單 --- */
-  function populateVoiceDropdown() {
-    if (!voiceSelectDropdown) return;
-    const sorted = getSortedChineseVoices();
-
-    voiceSelectDropdown.innerHTML = '';
-
-    if (sorted.length === 0) {
-      const opt = document.createElement('option');
-      opt.value = '';
-      opt.textContent = '系統未偵測到中文語音（將使用預設）';
-      voiceSelectDropdown.appendChild(opt);
-      if (currentVoiceBadge) currentVoiceBadge.textContent = '系統預設';
-      return;
-    }
-
-    sorted.forEach(v => {
-      const opt = document.createElement('option');
-      opt.value = v.voiceURI || v.name;
-
-      const score = scoreChineseVoice(v);
-      let qualityBadge = '';
-      if (score >= 180) qualityBadge = '🌟【極致擬真】';
-      else if (score >= 120) qualityBadge = '✨【自然人聲】';
-      else if (score >= 70) qualityBadge = '💎【高質語音】';
-      else if (score < 0) qualityBadge = '⚠️【早期機械音】';
-      else qualityBadge = '標準';
-
-      opt.textContent = `${qualityBadge} ${v.name} (${v.lang})`;
-      voiceSelectDropdown.appendChild(opt);
-    });
-
-    const activeVoice = pickBestVoice();
-    if (activeVoice) {
-      voiceSelectDropdown.value = activeVoice.voiceURI || activeVoice.name;
-      if (currentVoiceBadge) {
-        const isNatural = (activeVoice.name || '').toLowerCase().includes('natural') || scoreChineseVoice(activeVoice) >= 120;
-        currentVoiceBadge.textContent = isNatural ? `🌟 自然人聲：${activeVoice.name.split(' ')[0]}` : activeVoice.name.split(' ')[0];
-      }
-      updateVoiceIndicatorLabel(activeVoice);
-    }
-  }
-
-  /* --- 試聽人聲效果 --- */
-  function togglePreviewVoice() {
-    if (isSpeakingQueue && isPreviewMode) {
-      stopSpeech();
-      if (voicePreviewStatus) voicePreviewStatus.textContent = '已停止試聽';
-      return;
-    }
-
-    stopSpeech();
-
-    const targetVoice = pickBestVoice();
-    const previewText = "哈囉！我是刑法總論影音微課的 AI 導覽員。這是我現在說話的音色、語速與自然呼吸節奏。聽起來是不是非常像真人呢？";
-    const spoken = toSpokenLawText(previewText);
-
-    speechQueue = splitIntoProsodyChunks(spoken);
-    speechQueueIndex = 0;
-    isSpeakingQueue = true;
-    isPreviewMode = true;
-
-    speakNextQueueItem(targetVoice, true);
-  }
-
-  /* --- 打開聲音設定彈窗 --- */
-  function openVoiceSettingsModal() {
-    if (!voiceSettingsModal) return;
-    populateVoiceDropdown();
-
-    // 同步當前狀態至 UI
-    if (voicePersonaBtns) {
-      voicePersonaBtns.forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.persona === voiceSettings.persona);
-      });
-    }
-
-    if (voicePitchRange) {
-      voicePitchRange.value = voiceSettings.pitch;
-      if (voicePitchVal) voicePitchVal.textContent = `${parseFloat(voiceSettings.pitch).toFixed(2)}x`;
-    }
-
-    if (voiceSpeedRange) {
-      voiceSpeedRange.value = voiceSettings.rate;
-      if (voiceSpeedVal) voiceSpeedVal.textContent = `${parseFloat(voiceSettings.rate).toFixed(2)}x`;
-    }
-
-    if (voiceNaturalPauseCheckbox) {
-      voiceNaturalPauseCheckbox.checked = !!voiceSettings.naturalPauses;
-    }
-
-    voiceSettingsModal.style.display = 'flex';
-    voiceSettingsModal.setAttribute('aria-hidden', 'false');
-  }
-
-  /* --- 關閉聲音設定彈窗 --- */
-  function closeVoiceSettingsModal() {
-    if (!voiceSettingsModal) return;
-    if (isPreviewMode) stopSpeech();
-    voiceSettingsModal.style.display = 'none';
-    voiceSettingsModal.setAttribute('aria-hidden', 'true');
-  }
-
-  /* --- 儲存聲音設定到 LocalStorage --- */
-  function saveVoiceSettings() {
-    try {
-      localStorage.setItem('criminal_law_voice_settings', JSON.stringify(voiceSettings));
-      showToast('💾 聲音設定已成功儲存！');
-    } catch (e) {
-      console.warn('Cannot save to localStorage', e);
-    }
-    closeVoiceSettingsModal();
-
-    const activeVoice = pickBestVoice();
-    updateVoiceIndicatorLabel(activeVoice);
-
-    if (isPlaying) {
-      playSpeechForCurrentChapter();
-    }
-  }
-
-  /* --- 重設為推薦設定 --- */
-  function resetVoiceSettings() {
-    voiceSettings = { ...DEFAULT_VOICE_SETTINGS };
-    openVoiceSettingsModal();
-    showToast('🔄 已恢復為推薦自然人聲預設');
   }
 
   /* --- 事件監聽註冊 --- */
@@ -1445,7 +1305,7 @@ function initVideoPlayer() {
       });
     }
 
-    // 進度條點擊跳轉
+    // 進度條點擊跳轉（即時同步跳轉字幕與語音句子）
     if (videoProgressContainer) {
       videoProgressContainer.addEventListener('click', (e) => {
         const rect = videoProgressContainer.getBoundingClientRect();
@@ -1464,8 +1324,17 @@ function initVideoPlayer() {
             currentChapterIndex = i;
             chapterElapsedSec = Math.floor(targetSec - accumulated);
             renderCurrentSlide();
+
+            const sentences = getChapterSentences(ch.voiceText);
+            const sIdx = Math.min(
+              sentences.length - 1,
+              Math.floor((chapterElapsedSec / ch.durationSec) * sentences.length)
+            );
+            currentSentenceIndex = sIdx;
+            updateSubtitleUI(sentences[sIdx], sIdx, sentences.length);
+
             if (isPlaying) {
-              playSpeechForCurrentChapter();
+              playSpeechForCurrentChapter(sIdx);
               startProgressTimer();
             }
             break;
@@ -1487,105 +1356,32 @@ function initVideoPlayer() {
 
         if (voiceEnabled) {
           showToast('🔊 語音旁白朗讀已開啟');
-          if (isPlaying) playSpeechForCurrentChapter();
+          if (isPlaying) playSpeechForCurrentChapter(currentSentenceIndex);
         } else {
           stopSpeech();
-          showToast('🔇 語音旁白已靜音');
+          showToast('🔇 語音旁白已靜音（字幕持續同步）');
         }
       });
       // 預設高亮開啟
       voiceToggleBtn.classList.add('active');
     }
 
-    // 擬真人聲設定面板互動
-    if (voiceSettingsBtn) {
-      voiceSettingsBtn.addEventListener('click', openVoiceSettingsModal);
-    }
-    if (voiceIndicator) {
-      voiceIndicator.addEventListener('click', openVoiceSettingsModal);
-    }
-    if (voiceModalCloseBtn) {
-      voiceModalCloseBtn.addEventListener('click', closeVoiceSettingsModal);
-    }
-    if (voiceSettingsModal) {
-      voiceSettingsModal.addEventListener('click', (e) => {
-        if (e.target === voiceSettingsModal) {
-          closeVoiceSettingsModal();
-        }
-      });
-    }
-
-    // 人聲音色風格按鈕切換 (Persona)
-    if (voicePersonaBtns) {
-      voicePersonaBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-          voicePersonaBtns.forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          voiceSettings.persona = btn.dataset.persona;
-          voiceSettings.voiceURI = ''; // 清除自選以套用 Persona 推薦
-          populateVoiceDropdown();
-        });
-      });
-    }
-
-    // 詳細語音清單自選
-    if (voiceSelectDropdown) {
-      voiceSelectDropdown.addEventListener('change', () => {
-        voiceSettings.voiceURI = voiceSelectDropdown.value;
-        const sorted = getSortedChineseVoices();
-        const selectedVoice = sorted.find(v => (v.voiceURI || v.name) === voiceSettings.voiceURI);
-        if (selectedVoice && currentVoiceBadge) {
-          const isNatural = (selectedVoice.name || '').toLowerCase().includes('natural') || scoreChineseVoice(selectedVoice) >= 120;
-          currentVoiceBadge.textContent = isNatural ? `🌟 自然人聲：${selectedVoice.name.split(' ')[0]}` : selectedVoice.name.split(' ')[0];
-        }
-      });
-    }
-
-    // 音調與語速滑桿調節
-    if (voicePitchRange) {
-      voicePitchRange.addEventListener('input', () => {
-        voiceSettings.pitch = parseFloat(voicePitchRange.value);
-        if (voicePitchVal) voicePitchVal.textContent = `${voiceSettings.pitch.toFixed(2)}x`;
-      });
-    }
-    if (voiceSpeedRange) {
-      voiceSpeedRange.addEventListener('input', () => {
-        voiceSettings.rate = parseFloat(voiceSpeedRange.value);
-        if (voiceSpeedVal) voiceSpeedVal.textContent = `${voiceSettings.rate.toFixed(2)}x`;
-      });
-    }
-
-    // 自然換氣與停頓切換
-    if (voiceNaturalPauseCheckbox) {
-      voiceNaturalPauseCheckbox.addEventListener('change', () => {
-        voiceSettings.naturalPauses = voiceNaturalPauseCheckbox.checked;
-      });
-    }
-
-    // 試聽按鈕
-    if (voicePreviewBtn) {
-      voicePreviewBtn.addEventListener('click', togglePreviewVoice);
-    }
-
-    // 恢復推薦預設按鈕
-    if (voiceResetBtn) {
-      voiceResetBtn.addEventListener('click', resetVoiceSettings);
-    }
-
-    // 確認儲存按鈕
-    if (voiceSaveBtn) {
-      voiceSaveBtn.addEventListener('click', saveVoiceSettings);
-    }
-
-    // 監聽 Web Speech API 語音異步加載完畢事件
+    // 監聽 Web Speech API 語音非同步加載完畢事件
     if ('speechSynthesis' in window) {
       window.speechSynthesis.onvoiceschanged = () => {
-        populateVoiceDropdown();
+        singleBestVoice = null;
+        const v = getSingleBestVoice();
+        updateVoiceIndicatorLabel(v);
       };
       // 多階段主動載入檢查
-      setTimeout(populateVoiceDropdown, 150);
-      setTimeout(populateVoiceDropdown, 800);
-      setTimeout(populateVoiceDropdown, 2000);
+      setTimeout(() => {
+        const v = getSingleBestVoice();
+        updateVoiceIndicatorLabel(v);
+      }, 150);
+      setTimeout(() => {
+        const v = getSingleBestVoice();
+        updateVoiceIndicatorLabel(v);
+      }, 800);
     }
 
     // 倍速切換 (1.0x -> 1.25x -> 1.5x)
@@ -1600,7 +1396,7 @@ function initVideoPlayer() {
 
         if (isPlaying) {
           startProgressTimer();
-          playSpeechForCurrentChapter();
+          playSpeechForCurrentChapter(currentSentenceIndex);
         }
       });
     }

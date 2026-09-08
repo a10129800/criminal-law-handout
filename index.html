@@ -175,11 +175,11 @@
                 <span class="stage-badge-chap" id="stageChapBadge">分鏡 1 / 4</span>
                 <span class="live-status-pill" id="liveStatusPill">⏸ 點擊播放</span>
               </div>
-              <div class="stage-voice-indicator" id="voiceIndicator" title="語音導覽狀態（點擊開啟擬真人聲設定）">
+              <div class="stage-voice-indicator" id="voiceIndicator" title="高音質中文自然人聲導覽">
                 <span class="sound-wave"></span>
                 <span class="sound-wave"></span>
                 <span class="sound-wave"></span>
-                <span class="sound-text" id="voiceIndicatorText">AI 自然人聲就緒</span>
+                <span class="sound-text" id="voiceIndicatorText">自然中文語音就緒</span>
               </div>
             </div>
 
@@ -244,11 +244,7 @@
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
                     <span class="ctrl-label">語音旁白</span>
                   </button>
-                  <!-- 聲音設定 -->
-                  <button class="ctrl-btn btn-text" id="voiceSettingsBtn" title="擬真人聲與音色設定">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-                    <span class="ctrl-label">聲音設定</span>
-                  </button>
+
                   <!-- 語速選擇 -->
                   <button class="ctrl-btn btn-text" id="speedToggleBtn" title="切換播放倍速">
                     <span id="speedLabel">1.0x</span>
@@ -908,119 +904,6 @@
   <button id="backToTopBtn" class="back-to-top" title="回到頂部" aria-label="回到頂部">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m18 15-6-6-6 6"/></svg>
   </button>
-
-  <!-- 擬真人聲設定面板 (Voice Settings Modal) -->
-  <div class="voice-modal-overlay" id="voiceSettingsModal" style="display: none;" aria-hidden="true">
-    <div class="voice-modal-card" role="dialog" aria-labelledby="voiceModalTitle">
-      <div class="voice-modal-header">
-        <div class="voice-modal-title-group">
-          <span class="voice-modal-icon">🎙️</span>
-          <div>
-            <h3 class="voice-modal-title" id="voiceModalTitle">高擬真自然人聲設定</h3>
-            <p class="voice-modal-subtitle">優先啟用微軟 / Google 自然神經網路語音，告別機械音</p>
-          </div>
-        </div>
-        <button class="voice-modal-close" id="voiceModalCloseBtn" aria-label="關閉設定">&times;</button>
-      </div>
-
-      <div class="voice-modal-body">
-        <!-- 人聲音色風格選擇 (Persona) -->
-        <div class="voice-setting-section">
-          <label class="voice-setting-label">🎭 人聲音色風格 (Persona)</label>
-          <div class="voice-persona-grid">
-            <button class="voice-persona-btn active" data-persona="auto" type="button">
-              <span class="persona-icon">🌟</span>
-              <span class="persona-name">智慧最佳自然音</span>
-              <span class="persona-desc">自動匹配本機音質最高語音</span>
-            </button>
-            <button class="voice-persona-btn" data-persona="female" type="button">
-              <span class="persona-icon">🌸</span>
-              <span class="persona-name">臺灣自然女聲</span>
-              <span class="persona-desc">微軟曉臻 / Google 國語</span>
-            </button>
-            <button class="voice-persona-btn" data-persona="male" type="button">
-              <span class="persona-icon">👨‍🏫</span>
-              <span class="persona-name">臺灣沉穩男聲</span>
-              <span class="persona-desc">微軟雲哲 / 專業導師男聲</span>
-            </button>
-            <button class="voice-persona-btn" data-persona="anchor" type="button">
-              <span class="persona-icon">📢</span>
-              <span class="persona-name">新聞法學主播</span>
-              <span class="persona-desc">清晰端莊專業播報音</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- 詳細語音引擎選單 (Voice Engine) -->
-        <div class="voice-setting-section">
-          <div class="voice-setting-row">
-            <label class="voice-setting-label" for="voiceSelectDropdown">🎙️ 系統偵測到之中文語音清單</label>
-            <span class="voice-active-badge" id="currentVoiceBadge">偵測中...</span>
-          </div>
-          <select id="voiceSelectDropdown" class="voice-select-dropdown" aria-label="選擇語音包"></select>
-          <p class="voice-tip-text">💡 <strong>最佳體驗提示</strong>：推薦使用 <strong>Microsoft Edge</strong> 瀏覽器，內建全球最逼真的繁體中文「微軟曉臻 / 雲哲」免費神經網路真人聲音；Chrome 亦支援自然 Google 國語。</p>
-        </div>
-
-        <!-- 語速與音調微調 (Sliders) -->
-        <div class="voice-setting-section">
-          <div class="voice-sliders-grid">
-            <div class="voice-slider-item">
-              <div class="voice-slider-header">
-                <label for="voicePitchRange">🎵 音調沉著度 (Pitch)</label>
-                <span id="voicePitchVal" class="slider-val-badge">1.00x</span>
-              </div>
-              <input type="range" id="voicePitchRange" min="0.8" max="1.2" step="0.02" value="1.0" class="voice-range-input">
-              <div class="slider-ticks">
-                <span>低沉雄厚 (0.8)</span>
-                <span>自然 (1.0)</span>
-                <span>清亮明快 (1.2)</span>
-              </div>
-            </div>
-
-            <div class="voice-slider-item">
-              <div class="voice-slider-header">
-                <label for="voiceSpeedRange">⚡ 語速節奏 (Speed)</label>
-                <span id="voiceSpeedVal" class="slider-val-badge">1.00x</span>
-              </div>
-              <input type="range" id="voiceSpeedRange" min="0.8" max="1.5" step="0.05" value="1.0" class="voice-range-input">
-              <div class="slider-ticks">
-                <span>沈穩慢讀 (0.8x)</span>
-                <span>標準 (1.0x)</span>
-                <span>考前速讀 (1.5x)</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 自然換氣與停頓切換 -->
-        <div class="voice-setting-section">
-          <label class="voice-checkbox-label">
-            <input type="checkbox" id="voiceNaturalPauseCheckbox" checked>
-            <span class="checkbox-custom"></span>
-            <div class="checkbox-text-group">
-              <span class="checkbox-title">啟用人類自然呼吸換氣與標點停頓 (推薦)</span>
-              <span class="checkbox-sub">依標點符號加入 120ms~320ms 微停頓，語氣抑揚頓挫更自然，且徹底解決 Chrome 長篇朗讀中斷問題。</span>
-            </div>
-          </label>
-        </div>
-      </div>
-
-      <!-- 底部操作區 (試聽與儲存) -->
-      <div class="voice-modal-footer">
-        <div class="voice-preview-wrapper">
-          <button class="voice-preview-btn" id="voicePreviewBtn" type="button">
-            <span class="preview-icon">▶</span>
-            <span id="voicePreviewBtnText">試聽人聲效果</span>
-          </button>
-          <span class="voice-preview-status" id="voicePreviewStatus">點擊試聽測試音質</span>
-        </div>
-        <div class="voice-footer-actions">
-          <button class="voice-btn-reset" id="voiceResetBtn" type="button">恢復推薦預設</button>
-          <button class="voice-btn-confirm" id="voiceSaveBtn" type="button">確認完成</button>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- 全域 Toast 提示訊息 -->
   <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true"></div>
