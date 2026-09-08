@@ -584,6 +584,19 @@ function initVideoPlayer() {
   const chaptersList = document.getElementById('chaptersList');
   const chapCountBadge = document.getElementById('chapCountBadge');
   const copyCurrentScriptBtn = document.getElementById('copyCurrentScriptBtn');
+  const exportVideoBtn = document.getElementById('exportVideoBtn');
+  const heroWatchVideoBtn = document.getElementById('heroWatchVideoBtn');
+  const videoPosterOverlay = document.getElementById('videoPosterOverlay');
+  const bigPlayBtn = document.getElementById('bigPlayBtn');
+  const posterBadge = document.getElementById('posterBadge');
+  const posterTitle = document.getElementById('posterTitle');
+  const posterSubtitle = document.getElementById('posterSubtitle');
+  const videoCanvas = document.getElementById('videoCanvas');
+
+  // 啟動 Canvas 動態視訊渲染引擎
+  if (videoCanvas) {
+    initCanvasMotion(videoCanvas);
+  }
 
   // 初始化載入初級版
   loadLevel('beginner');
@@ -610,6 +623,26 @@ function initVideoPlayer() {
     if (stageLevelBadge) stageLevelBadge.textContent = currentLevelData.title;
     if (chapCountBadge) chapCountBadge.textContent = `共 ${currentLevelData.chapters.length} 幕`;
     if (totalTimeDisplay) totalTimeDisplay.textContent = formatTime(currentLevelData.totalSec);
+
+    // 更新封面大卡片文字
+    if (posterBadge) {
+      if (levelKey === 'beginner') posterBadge.textContent = '🌱 初級生活情境入門篇';
+      else if (levelKey === 'intermediate') posterBadge.textContent = '⚖️ 中級國考體系精講篇';
+      else if (levelKey === 'advanced') posterBadge.textContent = '🏛️ 高級法學深究憲判篇';
+    }
+    if (posterTitle) {
+      if (levelKey === 'beginner') posterTitle.textContent = '做了一件壞事 ＝ 這個人一定是壞人嗎？';
+      else if (levelKey === 'intermediate') posterTitle.textContent = '德日三階論與「不法推定罪責」兩階段架構';
+      else if (levelKey === 'advanced') posterTitle.textContent = '規範罪責論演進與2022年刑法§87重大革新';
+    }
+    if (posterSubtitle) {
+      if (levelKey === 'beginner') posterSubtitle.textContent = '生活實例劇場帶您看懂「不法推定罪責」兩階段判斷！';
+      else if (levelKey === 'intermediate') posterSubtitle.textContent = '六大抗辯條文深度剖析與實務三段論答題！';
+      else if (levelKey === 'advanced') posterSubtitle.textContent = '實質罪責原則、民法18歲成年與少事法曝險行政先行！';
+    }
+    if (videoPosterOverlay) {
+      videoPosterOverlay.classList.remove('hidden');
+    }
 
     // 渲染右側章節目錄清單
     renderChaptersList();
@@ -737,6 +770,7 @@ function initVideoPlayer() {
     isPlaying = true;
     if (iconPlay) iconPlay.style.display = 'none';
     if (iconPause) iconPause.style.display = 'block';
+    if (videoPosterOverlay) videoPosterOverlay.classList.add('hidden');
 
     playSpeechForCurrentChapter();
     startProgressTimer();
@@ -1012,15 +1046,41 @@ function initVideoPlayer() {
       });
     }
 
+    // 首頁快捷觀看按鈕
+    if (heroWatchVideoBtn) {
+      heroWatchVideoBtn.addEventListener('click', (e) => {
+        const secVideo = document.getElementById('section-video');
+        if (secVideo) {
+          e.preventDefault();
+          secVideo.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          setTimeout(() => {
+            if (!isPlaying) playVideo();
+          }, 500);
+        }
+      });
+    }
+
+    // 大封面播放鈕點擊播放
+    if (videoPosterOverlay) {
+      videoPosterOverlay.addEventListener('click', () => {
+        playVideo();
+      });
+    }
+
+    // 匯出/下載影片檔案
+    if (exportVideoBtn) {
+      exportVideoBtn.addEventListener('click', () => {
+        recordAndDownloadVideo();
+      });
+    }
+
     // 鍵盤空白鍵與方向鍵操控
     document.addEventListener('keydown', (e) => {
-      // 僅在非輸入框狀態下攔截
       if (['input', 'textarea'].includes(document.activeElement.tagName.toLowerCase())) {
         return;
       }
       if (e.code === 'Space') {
         const videoRect = container.getBoundingClientRect();
-        // 若播放器在可視範圍內則攔截
         if (videoRect.top < window.innerHeight && videoRect.bottom > 0) {
           e.preventDefault();
           togglePlay();
@@ -1038,6 +1098,194 @@ function initVideoPlayer() {
         }
       }
     });
+  }
+
+  /* --- 影片視訊錄製與下載功能 (HTML5 MediaRecorder) --- */
+  function recordAndDownloadVideo() {
+    const canvas = document.getElementById('videoCanvas');
+    if (!canvas || !window.MediaRecorder) {
+      showToast('⚠️ 您的瀏覽器不支援直接匯出影片，建議直接點擊播放線上觀看！');
+      return;
+    }
+
+    showToast('🎥 正在為您錄製並渲染視訊檔案（約 5 秒），請稍候...');
+
+    try {
+      const stream = canvas.captureStream(30);
+      const recordedChunks = [];
+      const mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm;codecs=vp9' });
+
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) {
+          recordedChunks.push(e.data);
+        }
+      };
+
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(recordedChunks, { type: 'video/webm' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        const levelNames = { beginner: '初級生活劇', intermediate: '中級國考體系', advanced: '高級憲政深究' };
+        a.download = `刑法總論講解影片_${levelNames[currentLevelKey] || currentLevelKey}.webm`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 2000);
+        showToast('✅ 影片檔下載成功！已存至您的電腦下載資料夾！');
+      };
+
+      mediaRecorder.start();
+      setTimeout(() => {
+        if (mediaRecorder.state === 'recording') {
+          mediaRecorder.stop();
+        }
+      }, 5000);
+    } catch (err) {
+      console.warn('Record video error:', err);
+      showToast('⚠️ 錄製視訊時遇到限制，建議直接於瀏覽器線上播放體驗！');
+    }
+  }
+
+  /* --- 動態 Canvas 60fps 視訊渲染引擎 --- */
+  function initCanvasMotion(canvas) {
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let animFrameId = null;
+    let tick = 0;
+
+    // 粒子系統
+    const particles = [];
+    for (let i = 0; i < 30; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 2 + 1,
+        vx: (Math.random() - 0.5) * 0.6,
+        vy: (Math.random() - 0.5) * 0.6,
+        alpha: Math.random() * 0.5 + 0.2
+      });
+    }
+
+    function renderLoop() {
+      tick++;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // 1. 深色劇院背景
+      const grad = ctx.createRadialGradient(
+        canvas.width / 2, canvas.height / 2, 20,
+        canvas.width / 2, canvas.height / 2, canvas.width / 1.4
+      );
+      grad.addColorStop(0, '#1e293b');
+      grad.addColorStop(0.5, '#0f172a');
+      grad.addColorStop(1, '#020617');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // 2. 背景律法幾何微光格網
+      ctx.strokeStyle = 'rgba(59, 130, 246, 0.05)';
+      ctx.lineWidth = 1;
+      const gridSize = 40;
+      for (let x = 0; x < canvas.width; x += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, canvas.height);
+        ctx.stroke();
+      }
+      for (let y = 0; y < canvas.height; y += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+      }
+
+      // 3. 浮動粒子動態
+      particles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0) p.x = canvas.width;
+        if (p.x > canvas.width) p.x = 0;
+        if (p.y < 0) p.y = canvas.height;
+        if (p.y > canvas.height) p.y = 0;
+
+        ctx.fillStyle = `rgba(245, 158, 11, ${p.alpha})`;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // 4. 動態法學天秤圖徽 (Swaying Scales of Justice)
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      const swayAngle = Math.sin(tick * 0.03) * 0.08;
+
+      ctx.save();
+      ctx.translate(centerX, centerY - 20);
+      ctx.rotate(swayAngle);
+
+      // 主橫梁
+      ctx.strokeStyle = '#f59e0b';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(-90, 0);
+      ctx.lineTo(90, 0);
+      ctx.stroke();
+
+      // 左右秤盤吊線
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = 'rgba(245, 158, 11, 0.7)';
+      // 左秤盤
+      ctx.beginPath();
+      ctx.moveTo(-90, 0);
+      ctx.lineTo(-90, 50);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(-90, 50, 22, 0, Math.PI);
+      ctx.stroke();
+      // 右秤盤
+      ctx.beginPath();
+      ctx.moveTo(90, 0);
+      ctx.lineTo(90, 50);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(90, 50, 22, 0, Math.PI);
+      ctx.stroke();
+
+      ctx.restore();
+
+      // 中央主立柱
+      ctx.strokeStyle = '#d97706';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(centerX, centerY - 40);
+      ctx.lineTo(centerX, centerY + 60);
+      ctx.stroke();
+      // 基座
+      ctx.beginPath();
+      ctx.moveTo(centerX - 35, centerY + 60);
+      ctx.lineTo(centerX + 35, centerY + 60);
+      ctx.stroke();
+
+      // 5. 播放中光波特效
+      if (isPlaying) {
+        const pulse = (Math.sin(tick * 0.08) + 1) * 0.5;
+        ctx.strokeStyle = `rgba(16, 185, 129, ${0.25 * pulse})`;
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, 80 + pulse * 40, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      // 6. 右上角電視台微課浮水印
+      ctx.font = '600 13px "Noto Sans TC", sans-serif';
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+      ctx.fillText('⚖️ 刑法微課 • 4K LegalTech', canvas.width - 190, 28);
+
+      animFrameId = requestAnimationFrame(renderLoop);
+    }
+
+    renderLoop();
   }
 
   /* --- 時間格式化 helper (03:45) --- */
