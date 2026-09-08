@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>刑法總論 • 學習講義｜犯罪概念與「不法推定罪責」體系</title>
+  <meta name="description" content="刑法總論學習講義：深入解析犯罪概念與「不法推定罪責」兩階段判斷體系、6大抗辯事由實例解析、刑法第16條至第20條條文剖析與2022-2023現行法最新改革檢視。">
+  
+  <!-- Google Fonts: Noto Serif TC (權威法學襯線) & Noto Sans TC (現代無襯線) & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Noto+Sans+TC:wght@300;400;500;600;700&family=Noto+Serif+TC:wght@600;700;900&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- 頂部進度條 -->
+  <div id="readingProgress" class="reading-progress"></div>
+
+  <!-- 頂部固定導覽列 -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="#" class="brand-logo">
+        <svg class="icon-scale" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/>
+          <path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/>
+          <path d="M7 21h10"/>
+          <path d="M12 3v18"/>
+          <path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/>
+        </svg>
+        <span class="brand-text">刑法總論 • 學習講義</span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="#section-core" class="nav-link">核心思維</a>
+        <a href="#section-cases" class="nav-link">6大案例</a>
+        <a href="#section-table" class="nav-link">綜合速查表</a>
+        <a href="#section-summary" class="nav-link">總結審查</a>
+        <a href="#section-quiz" class="nav-link">觀念測驗</a>
+      </nav>
+
+      <div class="nav-actions">
+        <!-- 搜尋觸發按鈕 -->
+        <button id="searchTriggerBtn" class="btn-icon" title="搜尋抗辯事由" aria-label="搜尋">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.3-4.3"/>
+          </svg>
+        </button>
+
+        <!-- 列印按鈕 -->
+        <button id="printBtn" class="btn-icon" title="列印講義 / 匯出 PDF" aria-label="列印">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 9V2h12v7"/>
+            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+            <path d="M6 14h12v8H6z"/>
+          </svg>
+        </button>
+
+        <!-- 深淺模式切換 -->
+        <button id="themeToggleBtn" class="btn-icon" title="切換深色/明亮模式" aria-label="切換主題">
+          <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+          </svg>
+          <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 主體內容 -->
+  <main class="container">
+    
+    <!-- Hero 標題區 -->
+    <section class="hero-section">
+      <div class="hero-badge">
+        <span class="badge-dot"></span> 刑法總則核心論述 • 講義數位化版
+      </div>
+      <h1 class="hero-title">犯罪的概念與<br><span class="gradient-text">「不法推定罪責」</span>體系</h1>
+      <p class="hero-subtitle">
+        基礎原著整理、條文結構解析與現行法規範適用評估
+        <span class="tag-compare">對比 2018 原書與現行最新法律</span>
+      </p>
+
+      <div class="hero-meta-bar">
+        <div class="meta-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10M6 10h10"/></svg>
+          <span>篇幅：4 頁完整講義</span>
+        </div>
+        <div class="meta-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span>審查基準：現行最新法規</span>
+        </div>
+        <div class="meta-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span>涵蓋法條：刑法 §16、§18、§19、§20、§23、§24、§87</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 壹、核心法律思維 -->
+    <section id="section-core" class="content-section">
+      <div class="section-header">
+        <div class="section-number">壹</div>
+        <div>
+          <h2 class="section-title">核心法律思維：什麼是犯罪？</h2>
+          <p class="section-desc">從直觀感覺出發，透視刑法精密審查的內在體系</p>
+        </div>
+      </div>
+
+      <!-- 直觀引言卡片 -->
+      <div class="quote-card">
+        <div class="quote-icon">“</div>
+        <p class="quote-content">
+          <strong>「一個壞人做了一件壞事」</strong>就是日常對犯罪最直觀的理解。<br>
+          但刑事司法面臨的首要難題是：<strong>判斷誰是壞人極其困難</strong>，但判斷<strong>「有沒有發生一件壞事」相對容易</strong>。
+        </p>
+        <div class="quote-footer">
+          因此，刑法採取<strong>「先評價行為，後評價行為人」</strong>的兩階段判斷架構：
+        </div>
+      </div>
+
+      <!-- 兩階段判斷體系：互動流程圖 -->
+      <div class="flowchart-wrapper">
+        <div class="flowchart-title-bar">
+          <span class="flowchart-title">⚖️ 刑法「不法推定罪責」審查流程圖（點擊各階段查看互動解析）</span>
+          <span class="flowchart-hint">點擊步驟切換檢視</span>
+        </div>
+
+        <div class="flowchart-grid">
+          <!-- 步驟一：評價行為 -->
+          <div class="flow-card active" data-step="1" id="flowStep1">
+            <div class="flow-step-tag">第一步：評價「行為」</div>
+            <h3 class="flow-step-title">客觀壞事（不法性）</h3>
+            <ul class="flow-step-list">
+              <li>
+                <span class="num-badge">①</span>
+                <span>該當構成要件之描述<br><small class="text-muted">（法益侵害 / 構成要件該當）</small></span>
+              </li>
+              <li>
+                <span class="num-badge">②</span>
+                <span>且無正當理由<br><small class="text-muted">（無阻卻違法事由）</small></span>
+              </li>
+            </ul>
+            <div class="flow-result-box positive">
+              ➔ 確認具備「不法性」
+            </div>
+          </div>
+
+          <!-- 推定橋樑 -->
+          <div class="flow-connector">
+            <div class="connector-line"></div>
+            <div class="connector-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m14 5 7 7-7 7M3 12h18"/></svg>
+              <span>經驗推定</span>
+            </div>
+            <div class="connector-caption">
+              做壞事者絕大多數具備可非難性
+            </div>
+          </div>
+
+          <!-- 步驟二：評價行為人 -->
+          <div class="flow-card" data-step="2" id="flowStep2">
+            <div class="flow-step-tag">第二步：評價「行為人」</div>
+            <h3 class="flow-step-title">主觀壞人（罪責性）</h3>
+            <div class="flow-body-text">
+              基於經驗累積，做壞事者絕大多數具備可非難性，故推定該行為人為<strong>「壞人」</strong>。
+            </div>
+            <div class="flow-result-box neutral">
+              ➔ 初步認定具備「罪責」
+            </div>
+          </div>
+        </div>
+
+        <!-- 反證推翻機制 -->
+        <div class="rebuttal-box" id="rebuttalBox">
+          <div class="rebuttal-header">
+            <svg class="icon-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <path d="m9 12 2 2 4-4"/>
+            </svg>
+            <span class="rebuttal-title">反證推翻機制（阻卻罪責事由）</span>
+            <span class="badge-status-rebuttal">容許被告提出抗辯</span>
+          </div>
+          <p class="rebuttal-desc">
+            「不法推定罪責」只是一種<strong>經驗上的直覺假設，並非百分之百可靠</strong>。因此刑法保留<strong>反證推翻的權利</strong>，允許行為人主張<strong>法定或超法定阻卻罪責事由</strong>，證明自己：
+          </p>
+          <div class="rebuttal-highlight">
+            「雖然做了一件壞事，但並不是法律應予非難的壞人。」
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 貳、原書案例解析與抗辯事由 -->
+    <section id="section-cases" class="content-section">
+      <div class="section-header">
+        <div class="section-number">貳</div>
+        <div>
+          <h2 class="section-title">原書案例解析與抗辯事由（對比現行法適用性）</h2>
+          <p class="section-desc">書中列舉 6 大典型抗辯案例，涵蓋刑法總則各項法定阻卻／減輕罪責及超法定事由。以下進行條理化剖析與最新法現狀審查：</p>
+        </div>
+      </div>
+
+      <!-- 案例快速過濾列 -->
+      <div class="filter-toolbar">
+        <div class="search-box">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+          </svg>
+          <input type="text" id="caseSearchInput" placeholder="搜尋案例（例：精神狀況、未成年、瘖啞、期待可能性、第16條...）" aria-label="搜尋案例">
+          <button id="clearSearchBtn" class="clear-btn" style="display:none;">&times;</button>
+        </div>
+        <div class="filter-chips">
+          <button class="chip active" data-filter="all">全部 (6)</button>
+          <button class="chip" data-filter="applicable">現行法完全適用 (4)</button>
+          <button class="chip" data-filter="updated">配套法規革新 (1)</button>
+          <button class="chip" data-filter="major">保安處分重大修法 (1)</button>
+        </div>
+      </div>
+
+      <!-- 6 大案例卡片清單 -->
+      <div class="cases-grid" id="casesGrid">
+
+        <!-- 案例 1-1 -->
+        <article class="case-card" data-category="applicable" id="case-1">
+          <div class="case-card-header">
+            <div class="case-number-badge">案例 1-1</div>
+            <h3 class="case-title">欠缺不法意識之抗辯</h3>
+            <span class="status-pill pill-green">現行法完全適用</span>
+          </div>
+
+          <!-- 對話情境 -->
+          <div class="dialogue-box">
+            <div class="dialogue-row">
+              <div class="avatar defendant">被告</div>
+              <div class="bubble defendant-bubble">
+                「這是一件壞事嗎？怎麼會？我以為這是 ok 的耶，對不起啦。」
+              </div>
+            </div>
+          </div>
+
+          <!-- 核心法條 -->
+          <div class="article-box">
+            <div class="article-header">
+              <span class="article-tag">【核心法條】</span>
+              <span class="article-name">刑法第 16 條（禁止錯誤／違法性錯誤）</span>
+              <button class="copy-btn" data-copy="刑法第16條：除有正當理由而無法避免者外，不得因不知法律而免除刑事責任。但按其情節，得減輕其刑。" title="複製法條內容">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                <span>複製條文</span>
+              </button>
+            </div>
+            <div class="article-desc">
+              <strong>【法律說明】</strong>行為人不知道自己的行為為法律所禁止（欠缺不法意識）。刑法規定：<mark class="highlight-text">「除有正當理由而無法避免者外，不得因不知法律而免除刑事責任。但按其情節，得減輕其刑。」</mark>若誤信有正當理由且客觀上不可避免，始得阻卻罪責；若非不可避免，僅得減輕其刑。
+            </div>
+          </div>
+
+          <!-- 現行法檢視 -->
+          <div class="review-box review-green">
+            <div class="review-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              現行法檢視
+            </div>
+            <p>刑法第 16 條自 2005 年刑法修正後沿用至今，2018 年原著之法理與現行司法實務完全相同且<strong>完全適用</strong>。</p>
+          </div>
+        </article>
+
+        <!-- 案例 1-2 -->
+        <article class="case-card" data-category="updated" id="case-2">
+          <div class="case-card-header">
+            <div class="case-number-badge">案例 1-2</div>
+            <h3 class="case-title">欠缺責任能力（年齡）之抗辯</h3>
+            <span class="status-pill pill-amber">現行法適用 • 配套法規微幅革新</span>
+          </div>
+
+          <!-- 對話情境 -->
+          <div class="dialogue-box">
+            <div class="dialogue-row">
+              <div class="avatar defendant">被告</div>
+              <div class="bubble defendant-bubble">
+                「雖然我做了一件壞事，但那是因為我年紀小而不懂事，原諒我好不好。」
+              </div>
+            </div>
+          </div>
+
+          <!-- 核心法條 -->
+          <div class="article-box">
+            <div class="article-header">
+              <span class="article-tag">【核心法條】</span>
+              <span class="article-name">刑法第 18 條（未成年人、高齡者之責任能力）</span>
+              <button class="copy-btn" data-copy="刑法第18條：未滿十四歲人之行為，不罰。十四歲以上未滿十八歲人之行為，得減輕其刑。滿八十歲人之行為，得減輕其刑。" title="複製法條內容">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                <span>複製條文</span>
+              </button>
+            </div>
+            <div class="article-desc">
+              <strong>【法律說明】</strong>
+              <ol class="rule-list">
+                <li><strong>① 未滿 14 歲人之行為：</strong>不罰（無責任能力）。</li>
+                <li><strong>② 14 歲以上未滿 18 歲人之行為：</strong>得減輕其刑（限制責任能力）。</li>
+                <li><strong>③ 滿 80 歲人之行為：</strong>得減輕其刑。</li>
+              </ol>
+            </div>
+          </div>
+
+          <!-- 現行法與配套革新檢視 -->
+          <div class="review-box review-amber">
+            <div class="review-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              現行法與配套革新檢視
+            </div>
+            <ul class="review-bullet-list">
+              <li><strong>刑法責任年齡未變：</strong>刑法第 18 條本身並未變更，仍以 14 歲為刑事責任分界線。</li>
+              <li><strong>民法與少事法連動革新：</strong>2023 年起民法成年年齡下修為 18 歲，刑法與民法責任完全接軌；此外，《少年事件處理法》全面廢除「少年虞犯」標籤，改為「曝險少年行政先行」機制，保障未成年觸法少年健全自我成長。</li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- 案例 1-3 -->
+        <article class="case-card" data-category="major" id="case-3">
+          <div class="case-card-header">
+            <div class="case-number-badge">案例 1-3</div>
+            <h3 class="case-title">欠缺責任能力（精神狀況）之抗辯</h3>
+            <span class="status-pill pill-red">實體要件適用 • 保安處分重大修法</span>
+          </div>
+
+          <!-- 對話情境 -->
+          <div class="dialogue-box">
+            <div class="dialogue-row">
+              <div class="avatar defendant">被告</div>
+              <div class="bubble defendant-bubble">
+                「吾乃伏虎羅漢降世，擊殺九世惡人乃替天行道！」
+              </div>
+            </div>
+            <div class="dialogue-row lawyer-row">
+              <div class="avatar lawyer">律師</div>
+              <div class="bubble lawyer-bubble">
+                「我的當事人病得不輕，他根本不知道自己在幹嘛。」
+              </div>
+            </div>
+          </div>
+
+          <!-- 核心法條 -->
+          <div class="article-box">
+            <div class="article-header">
+              <span class="article-tag">【核心法條】</span>
+              <span class="article-name">刑法第 19 條（精神障礙或其他心智缺陷）</span>
+              <button class="copy-btn" data-copy="刑法第19條：行為時因精神障礙或其他心智缺陷，致不能辨識其行為違法或欠缺依其辨識而行為之能力者，不罰。行為時因前項之原因，致其辨識行為違法或依其辨識而行為之能力，顯著減低者，得減輕其刑。前二項規定，於因故意或過失自行招致者，不適用之。" title="複製法條內容">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                <span>複製條文</span>
+              </button>
+            </div>
+            <div class="article-desc">
+              <strong>【法律說明】</strong>行為時因精神障礙或心智缺陷，致不能辨識其行為違法（辨識能力欠缺）或欠缺依其辨識而行為之能力（控制能力欠缺）者，<strong>不罰</strong>；若僅是顯著減低者，<strong>得減輕其刑</strong>。若為自行招致（原因自由行為），則不得減免。
+            </div>
+          </div>
+
+          <!-- 現行法重大修正提醒 -->
+          <div class="review-box review-red">
+            <div class="review-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              現行法重大修正提醒（監護處分大幅強化）
+            </div>
+            <ul class="review-bullet-list">
+              <li><strong>實體要件不變：</strong>刑法第 19 條阻卻／減輕罪責之要件未變，行為時喪失辨識或控制能力仍是不罰。</li>
+              <li><strong>2022 年刑法第 87 條監護處分修正：</strong>因精神障礙不罰或減刑者，若有再犯或危害公共安全之虞，法院得令施以監護。現行法已打破原本「監護上限 5 年」規定，改為<strong>首次延長 3 年，之後每次得延長 1 年且不限次數</strong>（需每年定期評估），並引進多層級門診治療等多元監護方式。</li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- 案例 1-4 -->
+        <article class="case-card" data-category="applicable" id="case-4">
+          <div class="case-card-header">
+            <div class="case-number-badge">案例 1-4</div>
+            <h3 class="case-title">欠缺責任能力（生理限制：瘖啞人）之抗辯</h3>
+            <span class="status-pill pill-green">現行法完全適用</span>
+          </div>
+
+          <!-- 對話情境 -->
+          <div class="dialogue-box">
+            <div class="dialogue-row">
+              <div class="avatar defendant">被告</div>
+              <div class="bubble defendant-bubble">
+                <em>（比手畫腳，啞口無言）</em>
+              </div>
+            </div>
+            <div class="dialogue-row lawyer-row">
+              <div class="avatar lawyer">律師</div>
+              <div class="bubble lawyer-bubble">
+                「我的當事人既聾且啞，智識水準較差，會犯下此等惡行實屬情有可原。」
+              </div>
+            </div>
+          </div>
+
+          <!-- 核心法條 -->
+          <div class="article-box">
+            <div class="article-header">
+              <span class="article-tag">【核心法條】</span>
+              <span class="article-name">刑法第 20 條（瘖啞人）</span>
+              <button class="copy-btn" data-copy="刑法第20條：瘖啞人之行為，得減輕其刑。" title="複製法條內容">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                <span>複製條文</span>
+              </button>
+            </div>
+            <div class="article-desc">
+              <strong>【法律說明】</strong>瘖啞人之行為，得減輕其刑。司法實務嚴格限定須為<strong>「出生或自幼（未滿 7 歲）即既聾且啞」</strong>者，方有適用；聾而不啞或啞而不聾均不符合。
+            </div>
+          </div>
+
+          <!-- 現行法檢視 -->
+          <div class="review-box review-green">
+            <div class="review-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              現行法檢視
+            </div>
+            <p>刑法第 20 條至今仍維持不變，2018 原書解析現行<strong>完全適用</strong>。</p>
+          </div>
+        </article>
+
+        <!-- 案例 1-5 -->
+        <article class="case-card" data-category="applicable" id="case-5">
+          <div class="case-card-header">
+            <div class="case-number-badge">案例 1-5</div>
+            <h3 class="case-title">防衛過當／避難過當之抗辯</h3>
+            <span class="status-pill pill-green">現行法完全適用</span>
+          </div>
+
+          <!-- 對話情境 -->
+          <div class="dialogue-box">
+            <div class="dialogue-row">
+              <div class="avatar defendant">被告</div>
+              <div class="bubble defendant-bubble">
+                「是對方先追著我打，情急之下我用手槍斃了他，應該不為過吧！」
+              </div>
+            </div>
+          </div>
+
+          <!-- 核心法條 -->
+          <div class="article-box">
+            <div class="article-header">
+              <span class="article-tag">【核心法條】</span>
+              <span class="article-name">刑法第 23 條但書、第 24 條第 1 項但書（過當行為）</span>
+              <button class="copy-btn" data-copy="刑法第23條但書：但防衛行為過當者，得減輕或免除其刑。刑法第24條第1項但書：但避難行為過當者，得減輕或免除其刑。" title="複製法條內容">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                <span>複製條文</span>
+              </button>
+            </div>
+            <div class="article-desc">
+              <strong>【法律說明】</strong>面對現在不法之侵害（正當防衛）或緊急危難（緊急避難），反擊手段超越了必要或相當之程度者，屬於「過當」。鑑於行為人處於緊急危難之心理恐慌情境，期待其冷靜拿捏反擊力道極為困難，故法律明定<strong>得減輕或免除其刑</strong>。
+            </div>
+          </div>
+
+          <!-- 現行法檢視 -->
+          <div class="review-box review-green">
+            <div class="review-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              現行法檢視
+            </div>
+            <p>刑法第 23 條但書與第 24 條但書維持不變，書中之責任非難減免理論<strong>完全適用於現行法</strong>。</p>
+          </div>
+        </article>
+
+        <!-- 案例 1-6 -->
+        <article class="case-card" data-category="applicable" id="case-6">
+          <div class="case-card-header">
+            <div class="case-number-badge">案例 1-6</div>
+            <h3 class="case-title">超法定阻卻罪責事由（無期待可能性）</h3>
+            <span class="status-pill pill-cyan">法理精髓 • 現行法完全相符</span>
+          </div>
+
+          <!-- 對話情境 -->
+          <div class="dialogue-box">
+            <div class="dialogue-row">
+              <div class="avatar defendant">被告</div>
+              <div class="bubble defendant-bubble">
+                「我當時在燙衣服，但因為幼兒從床上跌落而血流不止，我太慌亂了，急忙將幼兒送醫而忘了拔掉插頭，才會釀成火災。」
+              </div>
+            </div>
+          </div>
+
+          <!-- 核心法理 -->
+          <div class="article-box">
+            <div class="article-header">
+              <span class="article-tag">【核心法理】</span>
+              <span class="article-name">超法定阻卻罪責事由——欠缺期待可能性</span>
+              <button class="copy-btn" data-copy="超法定阻卻罪責事由：欠缺期待可能性。行為人處於極端困難或無助之情境，法律不強人所難，無法期待一般人在該處境下能為適法行為，阻卻其罪責。" title="複製法理要旨">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                <span>複製法理</span>
+              </button>
+            </div>
+            <div class="article-desc">
+              <strong>【法理說明】</strong>罪責的核心本質即為<strong>「期待可能性」</strong>。當行為人處於極端困難或無助的情境下，法律與社會不能強人所難，無法合理期待一般人在該處境下能保持冷靜拔掉插頭再送醫。因此，即便未符合刑法明文列舉的條款，亦得以<strong>「無期待可能性」</strong>阻卻其過失罪責。
+            </div>
+          </div>
+
+          <!-- 現行法檢視 -->
+          <div class="review-box review-cyan">
+            <div class="review-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              現行法檢視
+            </div>
+            <p>德國與台灣現代刑法學說及實務始終肯認「超法定阻卻責任事由」，此理論於今日毫無變動，依然是<strong>刑法罪責階層的黃金準則</strong>。</p>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- 參、綜合比較與重點速查表 -->
+    <section id="section-table" class="content-section">
+      <div class="section-header">
+        <div class="section-number">參</div>
+        <div>
+          <h2 class="section-title">綜合比較與重點速查表</h2>
+          <p class="section-desc">彙整 6 大典型抗辯事由之法條依據、法律效果與現行法適用審查狀態</p>
+        </div>
+      </div>
+
+      <div class="table-card">
+        <div class="table-toolbar">
+          <div class="table-info">
+            共 <strong id="tableCount">6</strong> 項抗辯事由與法規範
+          </div>
+          <div class="table-filter-input-wrap">
+            <input type="text" id="tableFilterInput" placeholder="即時篩選表格關鍵字（例如：18條、減輕、不罰、完全適用）..." aria-label="篩選表格">
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="law-table" id="lawTable">
+            <thead>
+              <tr>
+                <th scope="col" style="width: 20%;">抗辯事由類型</th>
+                <th scope="col" style="width: 22%;">法條依據 / 概念</th>
+                <th scope="col" style="width: 32%;">法律效果與原理</th>
+                <th scope="col" style="width: 26%;">現行適用狀態審查</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="fw-bold">欠缺不法意識</td>
+                <td><span class="code-badge">刑法第 16 條</span></td>
+                <td>正當理由不可避免者免責；得避免者得減輕其刑。</td>
+                <td><span class="table-tag tag-green">完全適用</span> 法條及實務維持一致。</td>
+              </tr>
+              <tr>
+                <td class="fw-bold">責任能力（年齡）</td>
+                <td><span class="code-badge">刑法第 18 條</span></td>
+                <td>未滿 14 歲不罰；14~18 歲及滿 80 歲得減輕其刑。</td>
+                <td><span class="table-tag tag-amber">條文適用</span> 民法成年修為 18 歲；少事法曝險行政先行。</td>
+              </tr>
+              <tr>
+                <td class="fw-bold">責任能力（心智缺陷）</td>
+                <td><span class="code-badge">刑法第 19 條</span></td>
+                <td>辨識/控制能力欠缺者不罰；顯著降低者得減輕其刑。</td>
+                <td><span class="table-tag tag-red">條文適用</span> 刑法第 87 條監護處分延長年限已全面改革。</td>
+              </tr>
+              <tr>
+                <td class="fw-bold">責任能力（生理缺陷）</td>
+                <td><span class="code-badge">刑法第 20 條</span></td>
+                <td>瘖啞人之行為，得減輕其刑。</td>
+                <td><span class="table-tag tag-green">完全適用</span> 實務維持自幼既聾且啞之嚴格標準。</td>
+              </tr>
+              <tr>
+                <td class="fw-bold">防衛 / 避難過當</td>
+                <td><span class="code-badge">刑法第 23、24 條但書</span></td>
+                <td>手段過當，得減輕或免除其刑。</td>
+                <td><span class="table-tag tag-green">完全適用</span> 現行刑法規範毫無更動。</td>
+              </tr>
+              <tr>
+                <td class="fw-bold">欠缺期待可能性</td>
+                <td><span class="code-badge">超法定阻卻罪責事由</span></td>
+                <td>客觀無法期待行為人為適法行為，阻卻罪責。</td>
+                <td><span class="table-tag tag-green">完全適用</span> 現代實質罪責論之核心思想。</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 肆、總結結論 -->
+    <section id="section-summary" class="content-section">
+      <div class="summary-hero-card">
+        <div class="summary-icon-bulb">💡</div>
+        <div class="summary-content">
+          <h2 class="summary-title">總結結論與法制前瞻評估</h2>
+          <p class="summary-paragraph">
+            這份 2018 年的教材內容在刑法古典<strong>「三階層犯罪論體系」</strong>與<strong>「不法推定罪責」</strong>的法理架構上<strong>完全依然適用，毫無過時</strong>。
+          </p>
+          <div class="summary-keypoints">
+            <div class="keypoint-card">
+              <div class="keypoint-tag">2022 重大改革</div>
+              <h4>刑法第 87 條 監護處分</h4>
+              <p>監護處分之期限彈性與審查制度於 2022 年進行重大改革，打破 5 年上限改為首次 3 年、續延每次 1 年無次數限制並定期評估。</p>
+            </div>
+            <div class="keypoint-card">
+              <div class="keypoint-tag">2023 連動革新</div>
+              <h4>民法成年 18 歲 & 少事法輔導</h4>
+              <p>2023 年民法成年年齡下修為 18 歲與刑法接軌，少事法落實「曝險少年行政先行」除標籤化輔導配套制度。</p>
+            </div>
+            <div class="keypoint-card">
+              <div class="keypoint-tag">歷久彌新</div>
+              <h4>核心抗辯與條文要件</h4>
+              <p>古典體系中行為評價與行為人評價兩階段架構、各項阻卻與減輕罪責事由，核心抗辯與條文要件皆完全正確有效！</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 伍、法學觀念互動速測 -->
+    <section id="section-quiz" class="content-section">
+      <div class="section-header">
+        <div class="section-number">伍</div>
+        <div>
+          <h2 class="section-title">法學觀念互動速測</h2>
+          <p class="section-desc">透過以下 3 道刑事實務爭點題目，即時檢驗您對罪責抗辯與最新法律修訂的掌握度</p>
+        </div>
+      </div>
+
+      <div class="quiz-container" id="quizContainer">
+        <!-- 題目 1 -->
+        <div class="quiz-card" data-quiz-id="1">
+          <div class="quiz-q-num">問題 1 / 3</div>
+          <h3 class="quiz-question">某甲受精神障礙影響，犯罪時喪失違法辨識能力，經法院依刑法第 19 條第 1 項判決不罰。關於現行刑法第 87 條監護處分之規定，何者正確？</h3>
+          <div class="quiz-options">
+            <button class="quiz-opt" data-index="0">A. 監護處分絕對不得超過 5 年，時間屆滿一律無條件釋放</button>
+            <button class="quiz-opt" data-index="1" data-correct="true">B. 2022 年修法後已打破 5 年上限，首次得延長 3 年，之後每次延長 1 年且無次數限制（需每年評估）</button>
+            <button class="quiz-opt" data-index="2">C. 行為人不罰即無保安處分適用空間，不得命施以監護</button>
+            <button class="quiz-opt" data-index="3">D. 監護處分只能在封閉精神病院執行，不允許門診多元治療</button>
+          </div>
+          <div class="quiz-feedback" style="display:none;"></div>
+        </div>
+
+        <!-- 題目 2 -->
+        <div class="quiz-card" data-quiz-id="2">
+          <div class="quiz-q-num">問題 2 / 3</div>
+          <h3 class="quiz-question">某乙遇極端緊急避難情境，慌亂之中未顧全所有細節而釀成過失，且客觀上一般人處於該極度恐慌無助之處境下均無從冷靜應對。此主張屬於下列何者？</h3>
+          <div class="quiz-options">
+            <button class="quiz-opt" data-index="0">A. 刑法第 16 條禁止錯誤</button>
+            <button class="quiz-opt" data-index="1">B. 刑法第 20 條瘖啞人抗辯</button>
+            <button class="quiz-opt" data-index="2" data-correct="true">C. 超法定阻卻罪責事由（欠缺期待可能性）</button>
+            <button class="quiz-opt" data-index="3">D. 原因自由行為</button>
+          </div>
+          <div class="quiz-feedback" style="display:none;"></div>
+        </div>
+
+        <!-- 題目 3 -->
+        <div class="quiz-card" data-quiz-id="3">
+          <div class="quiz-q-num">問題 3 / 3</div>
+          <h3 class="quiz-question">依據我國司法實務見解，主張刑法第 20 條「瘖啞人之行為，得減輕其刑」必須符合下列何項嚴格要件？</h3>
+          <div class="quiz-options">
+            <button class="quiz-opt" data-index="0">A. 年滿 18 歲後因意外導致聽力受損但能言語</button>
+            <button class="quiz-opt" data-index="1">B. 僅啞不能言但聽力健全正常</button>
+            <button class="quiz-opt" data-index="2" data-correct="true">C. 須為出生或自幼（未滿 7 歲）即「既聾且啞」者</button>
+            <button class="quiz-opt" data-index="3">D. 任何領有身心障礙手冊之聽語障人士皆直接一律減免刑度</button>
+          </div>
+          <div class="quiz-feedback" style="display:none;"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 頁尾 -->
+  <footer class="footer">
+    <div class="container footer-content">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>
+          <span>刑法總論 • 學習講義數位版</span>
+        </div>
+        <p class="footer-note">
+          以古典三階層體系與現行最新法規規範為基石，旨在提供法律學子與研習者清晰、精緻且即時的數位知識體系。
+        </p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-link-group">
+          <span class="group-title">快速導覽</span>
+          <a href="#section-core">核心法律思維</a>
+          <a href="#section-cases">6大抗辯案例</a>
+          <a href="#section-table">綜合速查表</a>
+          <a href="#section-summary">最新修法總結</a>
+          <a href="#section-quiz">法學觀念測驗</a>
+        </div>
+        <div class="footer-link-group">
+          <span class="group-title">GitHub Pages 發布</span>
+          <a href="README.md" target="_blank">部署說明文件 (README)</a>
+          <a href="https://github.com" target="_blank" rel="noopener">GitHub 官網</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <span>講義原著整理 2018 • 最新法現狀審查 2024–2026 • 支援全響應式與直接列印 (Print Ready)</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 浮動回頂部按鈕 -->
+  <button id="backToTopBtn" class="back-to-top" title="回到頂部" aria-label="回到頂部">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m18 15-6-6-6 6"/></svg>
+  </button>
+
+  <!-- 全域 Toast 提示訊息 -->
+  <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true"></div>
+
+  <!-- 主邏輯 JS -->
+  <script src="js/app.js"></script>
+</body>
+</html>
