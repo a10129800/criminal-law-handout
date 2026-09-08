@@ -42,7 +42,6 @@ criminal-law-handout/
 
 ---
 
-<<<<<<< HEAD
 ## 🎬 如何觀看與播放分級講解影片？
 
 本專案提供 3 種觀看與取得影片的方式：
@@ -64,5 +63,3 @@ criminal-law-handout/
 ## 💻 本機即時預覽方式
 
 直接以滑鼠雙擊 `index.html` 或 `video.html` 即可在任一瀏覽器（Chrome, Edge, Safari, Firefox）中開啟預覽，所有影音播放、動畫與互動功能均可正常運作！
-=======
->>>>>>> 60cf5b889b274efe1d714b21ad7f5e4f790bb54b
