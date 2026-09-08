@@ -24,63 +24,7 @@
 
 ---
 
-## 🚀 如何上傳到 GitHub 並開啟 GitHub Pages？（超簡單 3 步驟）
 
-你可以選擇 **【方法一：用瀏覽器直接上傳（免裝指令）】** 或 **【方法二：使用 Git 指令】**：
-
-### 【方法一】直接在 GitHub 網頁操作（最推薦）
-
-1. **建立新的 GitHub 儲存庫（Repository）**：
-   - 前往 [GitHub.com](https://github.com/) 並登入你的帳號。
-   - 點擊右上角 `+` ➜ **New repository**。
-   - 填寫 Repository name（例如：`criminal-law-notes`），設定為 **Public**（公開），勾選「Add a README file」或留空皆可，點擊 **Create repository**。
-2. **上傳本資料夾內的所有檔案**：
-   - 在剛建好的儲存庫頁面，點擊 **Add file** ➜ **Upload files**。
-   - 將本資料夾裡的所有內容整包拖曳上傳：
-     - `index.html`（必須放在根目錄）
-     - `css/` 資料夾（內含 `style.css`）
-     - `js/` 資料夾（內含 `app.js`）
-     - `README.md`
-   - 點擊下方綠色按鈕 **Commit changes**。
-3. **開啟 GitHub Pages 網站發布**：
-   - 進入儲存庫上方的 **Settings**（設定）分頁。
-   - 點擊左側側邊欄的 **Pages**。
-   - 在 **Build and deployment** 下方：
-     - **Source** 選擇：`Deploy from a branch`
-     - **Branch** 選擇：`main`（或 `master`），資料夾選擇 `/ (root)`
-     - 點擊 **Save**（儲存）。
-   - 等待約 30 秒至 1 分鐘重新整理頁面，最上方就會出現你的專屬網址：
-     ```text
-     https://<你的GitHub帳號>.github.io/criminal-law-notes/
-     ```
-
----
-
-### 【方法二】使用 Git 命令列上傳
-
-在終端機（Terminal / PowerShell）切換至本專案目錄執行：
-
-```bash
-# 1. 初始化本地 Git 儲存庫
-git init
-
-# 2. 加入所有檔案並提交
-git add .
-git commit -m "feat: initial commit of criminal law handout page"
-
-# 3. 命名主分支為 main
-git branch -M main
-
-# 4. 關聯到你的 GitHub 遠端儲存庫（請將 URL 換成你的倉庫網址）
-git remote add origin https://github.com/<你的GitHub帳號>/<你的倉庫名稱>.git
-
-# 5. 推送至 GitHub
-git push -u origin main
-```
-
-推送完成後，同樣前往 GitHub 儲存庫的 **Settings > Pages** 依上述方式開啟即可！
-
----
 
 ## 📂 檔案目錄結構
 
@@ -97,6 +41,3 @@ criminal-law-handout/
 
 ---
 
-## 💻 本機即時預覽方式
-
-直接以滑鼠雙擊 `index.html` 即可在任一瀏覽器（Chrome, Edge, Safari, Firefox）中開啟預覽，所有互動功能與複製按鈕均可正常運作！
