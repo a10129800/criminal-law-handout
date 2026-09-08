@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initQuiz();
   initShortcuts();
   initVideoPlayer();
+  initMobileMenu();
 });
 
 /* =========================================================
@@ -1882,4 +1883,148 @@ function initVideoPlayer() {
     return `${mm}:${ss}`;
   }
 }
+
+/* =========================================================
+   手機版選單與導覽抽屜互動 (Mobile Navigation System)
+   ========================================================= */
+function initMobileMenu() {
+  const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+  const mobileDrawer = document.getElementById('mobileDrawer');
+  const bottomMenuTrigger = document.getElementById('bottomMenuTrigger');
+  const drawerLinks = document.querySelectorAll('.mobile-drawer-link, .drawer-theater-btn');
+  const bottomBarItems = document.querySelectorAll('.mobile-bottom-bar .bottom-bar-item:not(.btn-trigger)');
+
+  if (!mobileMenuBtn || !mobileDrawer) return;
+
+  function toggleMenu(forceState) {
+    const isOpen = typeof forceState === 'boolean' ? forceState : !mobileDrawer.classList.contains('open');
+    if (isOpen) {
+      mobileDrawer.classList.add('open');
+      mobileMenuBtn.classList.add('active');
+      mobileMenuBtn.setAttribute('aria-expanded', 'true');
+      mobileDrawer.setAttribute('aria-hidden', 'false');
+      if (bottomMenuTrigger) bottomMenuTrigger.classList.add('active');
+    } else {
+      mobileDrawer.classList.remove('open');
+      mobileMenuBtn.classList.remove('active');
+      mobileMenuBtn.setAttribute('aria-expanded', 'false');
+      mobileDrawer.setAttribute('aria-hidden', 'true');
+      if (bottomMenuTrigger) bottomMenuTrigger.classList.remove('active');
+    }
+  }
+
+  // 頂部漢堡按鈕點擊切換
+  mobileMenuBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleMenu();
+  });
+
+  // 底部快捷列「目錄」按鈕點擊切換
+  if (bottomMenuTrigger) {
+    bottomMenuTrigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const willOpen = !mobileDrawer.classList.contains('open');
+      toggleMenu(willOpen);
+      if (willOpen) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    });
+  }
+
+  // 點擊抽屜內任意導覽項目後自動關閉抽屜
+  drawerLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      toggleMenu(false);
+    });
+  });
+
+  // 點擊抽屜以外的任何地方自動收起
+  document.addEventListener('click', (e) => {
+    if (mobileDrawer.classList.contains('open')) {
+      if (!mobileDrawer.contains(e.target) && 
+          !mobileMenuBtn.contains(e.target) && 
+          (!bottomMenuTrigger || !bottomMenuTrigger.contains(e.target))) {
+        toggleMenu(false);
+      }
+    }
+  });
+
+  // 按下 ESC 鍵關閉
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && mobileDrawer.classList.contains('open')) {
+      toggleMenu(false);
+    }
+  });
+
+  // 螢幕寬度拉大時自動收合
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 860 && mobileDrawer.classList.contains('open')) {
+      toggleMenu(false);
+    }
+  });
+
+  // 首頁專屬觸發事件（平滑精確置頂）
+  const homeTriggers = document.querySelectorAll('#navLinkHome, #bottomBarHome, .brand-logo');
+  homeTriggers.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      history.replaceState(null, '', '#section-hero');
+      toggleMenu(false);
+    });
+  });
+
+  // 導覽按鈕高亮聯動（監聽滾動對應章節，支援桌面端與手機端）
+  const sectionIds = [
+    'section-hero',
+    'section-video',
+    'section-core',
+    'section-cases',
+    'section-table',
+    'section-summary',
+    'section-quiz'
+  ];
+  const sections = sectionIds.map(id => document.getElementById(id)).filter(Boolean);
+  const desktopNavLinks = document.querySelectorAll('.nav-links .nav-link');
+
+  if (sections.length > 0) {
+    let scrollTimeout;
+    window.addEventListener('scroll', () => {
+      if (scrollTimeout) return;
+      scrollTimeout = setTimeout(() => {
+        scrollTimeout = null;
+        const scrollPos = window.scrollY + 180;
+        let currentSectionId = 'section-hero';
+        for (let i = sections.length - 1; i >= 0; i--) {
+          const sec = sections[i];
+          if (sec.offsetTop <= scrollPos) {
+            currentSectionId = sec.id;
+            break;
+          }
+        }
+
+        // 更新手機底部欄 active
+        bottomBarItems.forEach(item => {
+          const href = item.getAttribute('href') || '';
+          if (href === `#${currentSectionId}`) {
+            item.classList.add('active');
+          } else {
+            item.classList.remove('active');
+          }
+        });
+
+        // 更新桌面頂部導覽列 active
+        desktopNavLinks.forEach(link => {
+          const href = link.getAttribute('href') || '';
+          if (href === `#${currentSectionId}`) {
+            link.classList.add('active');
+          } else {
+            link.classList.remove('active');
+          }
+        });
+      }, 80);
+    }, { passive: true });
+  }
+}
+
 

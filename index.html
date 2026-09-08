@@ -20,7 +20,7 @@
   <!-- 頂部固定導覽列 -->
   <header class="navbar">
     <div class="nav-container">
-      <a href="#" class="brand-logo">
+      <a href="#section-hero" class="brand-logo" title="回到講義首頁">
         <svg class="icon-scale" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/>
           <path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/>
@@ -32,6 +32,7 @@
       </a>
 
       <nav class="nav-links">
+        <a href="#section-hero" class="nav-link active" id="navLinkHome">🏠 首頁</a>
         <a href="#section-video" class="nav-link nav-link-highlight">🎬 影音微課</a>
         <a href="#section-core" class="nav-link">核心思維</a>
         <a href="#section-cases" class="nav-link">12大經典案例</a>
@@ -68,6 +69,82 @@
             <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
           </svg>
         </button>
+
+        <!-- 手機版漢堡選單按鈕 (Mobile Menu Toggle Button) -->
+        <button id="mobileMenuBtn" class="btn-icon mobile-menu-btn" title="開啟手機選單" aria-label="切換手機選單" aria-expanded="false">
+          <span class="hamburger-box">
+            <span class="hamburger-line line-1"></span>
+            <span class="hamburger-line line-2"></span>
+            <span class="hamburger-line line-3"></span>
+          </span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 手機版下拉導覽抽屜 (Mobile Nav Drawer) -->
+    <div id="mobileDrawer" class="mobile-drawer" aria-hidden="true">
+      <div class="mobile-drawer-inner">
+        <div class="drawer-header">
+          <span class="drawer-title">📌 章節快速導覽</span>
+          <span class="drawer-badge">12大經典案例</span>
+        </div>
+        <nav class="mobile-drawer-links">
+          <a href="#section-hero" class="mobile-drawer-link">
+            <span class="drawer-link-icon">🏠</span>
+            <span class="drawer-link-text">
+              <strong>講義首頁</strong>
+              <small>體系總覽・學習地圖與導讀傳送門</small>
+            </span>
+          </a>
+          <a href="#section-video" class="mobile-drawer-link">
+            <span class="drawer-link-icon">🎬</span>
+            <span class="drawer-link-text">
+              <strong>影音動態微課</strong>
+              <small>4大分級與案例特輯放映</small>
+            </span>
+          </a>
+          <a href="#section-core" class="mobile-drawer-link">
+            <span class="drawer-link-icon">⚖️</span>
+            <span class="drawer-link-text">
+              <strong>核心法律思維</strong>
+              <small>不法雙指標與目的犯罪論</small>
+            </span>
+          </a>
+          <a href="#section-cases" class="mobile-drawer-link">
+            <span class="drawer-link-icon">📚</span>
+            <span class="drawer-link-text">
+              <strong>12大經典案例庫</strong>
+              <small>櫻桃案・輸血案・黑白猜・責任能力</small>
+            </span>
+          </a>
+          <a href="#section-table" class="mobile-drawer-link">
+            <span class="drawer-link-icon">📊</span>
+            <span class="drawer-link-text">
+              <strong>綜合重點速查表</strong>
+              <small>12項抗辯事由與現行法審查</small>
+            </span>
+          </a>
+          <a href="#section-summary" class="mobile-drawer-link">
+            <span class="drawer-link-icon">🏛️</span>
+            <span class="drawer-link-text">
+              <strong>最新修法與總結</strong>
+              <small>§87監護處分改革與少事法連動</small>
+            </span>
+          </a>
+          <a href="#section-quiz" class="mobile-drawer-link">
+            <span class="drawer-link-icon">💡</span>
+            <span class="drawer-link-text">
+              <strong>法學觀念測驗</strong>
+              <small>經典國考爭點實戰速測</small>
+            </span>
+          </a>
+        </nav>
+        <div class="drawer-footer">
+          <a href="video.html" class="drawer-theater-btn">
+            <span>🎥 進入獨立全螢幕放映廳</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+          </a>
+        </div>
       </div>
     </div>
   </header>
@@ -75,8 +152,8 @@
   <!-- 主體內容 -->
   <main class="container">
     
-    <!-- Hero 標題區 -->
-    <section class="hero-section">
+    <!-- Hero 標題區 (講義首頁入口) -->
+    <section id="section-hero" class="hero-section">
       <div class="hero-badge">
         <span class="badge-dot"></span> 刑法總則核心論述 • 講義數位化版
       </div>
@@ -106,12 +183,12 @@
         <div class="cta-card-left">
           <div class="cta-video-thumb">
             <div class="thumb-play-icon">▶</div>
-            <span class="thumb-badge">3大版本</span>
+            <span class="thumb-badge">4大版本</span>
           </div>
           <div class="cta-info">
             <span class="cta-tag">🎬 影音講解微課已就緒</span>
             <h3 class="cta-title">點擊立即觀看「不法推定罪責」分級講解影片</h3>
-            <p class="cta-desc">提供 🌱 初級生活情境劇（3分半）｜ ⚖️ 中級國考體系（8分半）｜ 🏛️ 高級憲政深究（14分鐘）</p>
+            <p class="cta-desc">提供 🌱 初級生活情境劇（3分半）｜ ⚖️ 中級國考體系（8分半）｜ 🏛️ 高級憲政深究（14分鐘）｜ ⚔️ 案例特輯</p>
           </div>
         </div>
         <div class="cta-card-right">
@@ -120,6 +197,67 @@
           </a>
           <a href="video.html" class="btn-hero-theater" target="_blank" title="在新分頁開啟全螢幕獨立放映廳">
             <span>獨立放映廳 ↗</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- 首頁快捷學習導讀傳送門 (Home Quick Learning Portal) -->
+      <div class="home-portal-section">
+        <div class="portal-header">
+          <span class="portal-header-title">🧭 首頁導讀 • 4 大核心學習傳送門</span>
+          <span class="portal-header-tag">點擊卡片直達章節</span>
+        </div>
+        <div class="home-portal-grid">
+          <a href="#section-video" class="portal-card" title="跳轉至影音動態微課">
+            <div class="portal-card-top">
+              <span class="portal-card-icon amber">🎬</span>
+              <span class="portal-card-badge">4大版本</span>
+            </div>
+            <h4 class="portal-card-title">影音動態微課</h4>
+            <p class="portal-card-desc">初級生活劇、中級國考體系、高級憲判與案例特輯全分鏡放映</p>
+            <div class="portal-card-action">
+              <span>立即收看</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+            </div>
+          </a>
+
+          <a href="#section-core" class="portal-card" title="跳轉至核心法律思維">
+            <div class="portal-card-top">
+              <span class="portal-card-icon blue">⚖️</span>
+              <span class="portal-card-badge">體系關鍵</span>
+            </div>
+            <h4 class="portal-card-title">核心法律思維</h4>
+            <p class="portal-card-desc">目的犯罪論主客觀構造、法秩序實質正當化與三階論流程</p>
+            <div class="portal-card-action">
+              <span>深入研讀</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+            </div>
+          </a>
+
+          <a href="#section-cases" class="portal-card" title="跳轉至12大經典案例庫">
+            <div class="portal-card-top">
+              <span class="portal-card-icon purple">📚</span>
+              <span class="portal-card-badge">12大情境</span>
+            </div>
+            <h4 class="portal-card-title">12大經典案例庫</h4>
+            <p class="portal-card-desc">櫻桃案（權利濫用）、強抽輸血案（人性尊嚴）、黑白猜等</p>
+            <div class="portal-card-action">
+              <span>查閱案例</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+            </div>
+          </a>
+
+          <a href="#section-quiz" class="portal-card" title="跳轉至法學觀念測驗">
+            <div class="portal-card-top">
+              <span class="portal-card-icon green">💡</span>
+              <span class="portal-card-badge">實戰速測</span>
+            </div>
+            <h4 class="portal-card-title">實戰觀念測驗</h4>
+            <p class="portal-card-desc">精選司法官與律師國考爭點題目，即時答題與詳解即時反饋</p>
+            <div class="portal-card-action">
+              <span>開始測驗</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+            </div>
           </a>
         </div>
       </div>
@@ -1252,6 +1390,31 @@
       </div>
     </div>
   </footer>
+
+  <!-- 手機版底部常駐快捷導覽列 (Mobile Bottom Navigation Bar) -->
+  <!-- 手機版底部常駐快捷導覽列 (Mobile Bottom Navigation Bar) -->
+  <nav class="mobile-bottom-bar" id="mobileBottomBar" aria-label="手機快捷導覽">
+    <a href="#section-hero" class="bottom-bar-item active" id="bottomBarHome">
+      <span class="bar-icon">🏠</span>
+      <span class="bar-label">首頁</span>
+    </a>
+    <a href="#section-video" class="bottom-bar-item">
+      <span class="bar-icon">🎬</span>
+      <span class="bar-label">微課</span>
+    </a>
+    <a href="#section-core" class="bottom-bar-item">
+      <span class="bar-icon">⚖️</span>
+      <span class="bar-label">核心</span>
+    </a>
+    <a href="#section-cases" class="bottom-bar-item">
+      <span class="bar-icon">📚</span>
+      <span class="bar-label">案例</span>
+    </a>
+    <button id="bottomMenuTrigger" class="bottom-bar-item btn-trigger" aria-label="打開手機章節目錄" title="開啟選單">
+      <span class="bar-icon">☰</span>
+      <span class="bar-label">目錄</span>
+    </button>
+  </nav>
 
   <!-- 浮動回頂部按鈕 -->
   <button id="backToTopBtn" class="back-to-top" title="回到頂部" aria-label="回到頂部">
