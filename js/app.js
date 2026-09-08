@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initFlowchartInteraction();
   initQuiz();
   initShortcuts();
+  initVideoPlayer();
 });
 
 /* =========================================================
@@ -306,5 +307,746 @@ function initShortcuts() {
         searchInput.focus();
       }
     }
-  });
 }
+
+/* =========================================================
+   10. 影音講解微課：互動播放器引擎 (Video Explainer Studio Engine)
+   ========================================================= */
+function initVideoPlayer() {
+  const container = document.getElementById('videoPlayerContainer');
+  if (!container) return;
+
+  // 播放器資料庫：初級、中級、高級分鏡腳本
+  const videoData = {
+    beginner: {
+      id: 'beginner',
+      title: '🌱 初級生活情境版',
+      totalSec: 225, // 03:45
+      chapters: [
+        {
+          index: 1,
+          title: '開場引言：做壞事一定是壞人嗎？',
+          topic: '生活直觀與法律思考',
+          durationSec: 45,
+          durationText: '00:45',
+          icon: '⚖️',
+          box1Title: '直觀感覺：拿了沒付錢就是犯罪？',
+          box1Desc: '日常生活中，我們直覺認定「犯罪就是一個壞人做了一件壞事」，把事情跟人直接劃上等號。',
+          box2Title: '人性複雜：如果是生病或救人呢？',
+          box2Desc: '如果有人推倒路人是為了擋開失控卡車？如果他是重度思覺失調分不清現實？我們能一概而論罵他「壞」嗎？',
+          takeaway: '做了一件壞事 ＝ 這個人一定是壞人嗎？刑法發明了超聰明的兩步驟判斷！',
+          subtitle: '哈囉大家好！在直覺裡，犯罪好像就是「壞人做壞事」，但法律真的能把做壞事的人全部一棒打死說他是壞人嗎？',
+          voiceText: '哈囉大家好！如果有人在便利商店拿了東西沒付錢，我們會說：天啊，他犯罪了！在大家的直覺裡，犯罪好像就是「一個壞人做了一件壞事」對吧？但是，法律真的能直接把做壞事的人，全部一棒打死說他是壞人嗎？想像一下：如果一個人生病發高燒甚至思覺失調，他根本不知道自己在做什麼，我們能罵他是壞人嗎？今天這支影片，就帶大家用 3 分鐘，看懂刑法最厲害的兩步驟判斷魔法！',
+          tags: ['生活情境', '直觀思考', '壞人vs壞事']
+        },
+        {
+          index: 2,
+          title: '兩步驟大解密：先看事情，再看人！',
+          topic: '兩階段審查與反證推翻',
+          durationSec: 60,
+          durationText: '01:00',
+          icon: '🔄',
+          box1Title: '第一步：客觀壞事（不法性）',
+          box1Desc: '打人、偷東西客觀上侵害他人法益，且無正當防衛等正當理由，客觀上確認這是一件「壞事」。',
+          box2Title: '第二步：主觀壞人（罪責性與反證推翻）',
+          box2Desc: '常理經驗推定做壞事者有非難性，但刑法保留「反證推翻」後門，允許被告提出事由證明自己不是法律應罰的壞人！',
+          takeaway: '「雖然我做了一件壞事，但我並不是法律應予非難的壞人！」',
+          subtitle: '法官要審案子，最難的是「人心隔肚皮」。所以刑法採取「先評價行為，後評價行為人」的兩階段判斷架構！',
+          voiceText: '法官要審案子，最困難的一件事就是：人心隔肚皮，誰知道你心裡到底在想什麼？所以刑法發明了一套超聰明的兩階段思考法：第一步，先看這件事是不是壞事，這叫作具備不法性。第二步，既然你做了壞事，我們通常會先推論你可能是有問題的。但是！刑法留了一扇超重要的後門，叫作「反證推翻」！也就是說，法律允許你拿出證據向法官解釋：法官大人，這件事確實是壞事，但我真的有逼不得已的理由！',
+          tags: ['兩階段判斷', '不法性', '反證推翻']
+        },
+        {
+          index: 3,
+          title: '常見抗辯劇場：法律的免死金牌有哪些？',
+          topic: '常見阻卻罪責事由',
+          durationSec: 75,
+          durationText: '01:15',
+          icon: '🛡️',
+          box1Title: '生病了與年紀小（責任能力）',
+          box1Desc: '刑法§19重度心智缺陷欠缺辨識能力者不罰（需要的是治療）；刑法§18未滿14歲心智未成熟不罰。',
+          box2Title: '極限逼不得已（欠缺期待可能性）',
+          box2Desc: '被刀抵著頭逼開保險箱，換成一般人都無法冷靜拒絕。當一般人都做不到時，法律不會強求你當聖人！',
+          takeaway: '法律不只是冷酷懲罰，當一般正常人都無從克制時，法律不會強求人當正義超人！',
+          subtitle: '法律承認哪些理由呢？生病重度思覺失調時他需要治療，未滿14歲心智未成熟不罰，被逼開保險箱更無從期待當聖人！',
+          voiceText: '那麼，法律承認哪些理由可以幫你洗刷壞人的標籤呢？第一個最常見的，是生病了！像刑法第 19 條規定：如果一個人在行為時，因為嚴重的精神疾病，完全失去了辨識是非的能力，法律認為非難他毫無意義，他需要的是治療而不是單純坐牢！第二個是未滿 14 歲的小朋友，心智還在成長，第 18 條規定不罰。第三個，是極限情境下被拿刀逼著犯罪，當一般正常人都做不到時，法律也不會強求你當聖人，這就叫作欠缺期待可能性！',
+          tags: ['§19精神障礙', '§18年齡', '期待可能性']
+        },
+        {
+          index: 4,
+          title: '總結：法律不只是懲罰，更充滿對人性的理解',
+          topic: '全篇回顧與刑法價值',
+          durationSec: 45,
+          durationText: '00:45',
+          icon: '💡',
+          box1Title: '壞事歸壞事：客觀劃定法益界線',
+          box1Desc: '嚴格評價行為是否合乎社會秩序，保護公民權利不受侵害。',
+          box2Title: '人不能亂罰：主觀具備非難性才動刑',
+          box2Desc: '唯有在行為人具備自主是非選擇能力時，國家的刑罰制裁才具有道德正當性。',
+          takeaway: '這就是刑法總論最核心的基石——「不法推定罪責」！',
+          subtitle: '刑法的世界不是冷冰冰的「做了就罰」，唯有具備自主控制能力時，國家的懲罰才具正當性。',
+          voiceText: '所以你看，刑法的世界不是冷冰冰的做了就罰，而是非常精密地先分清壞事與壞人。做壞事代表侵害了秩序，但唯有你具備自主控制與是非判斷能力時，國家的懲罰才具有正當性。這就是刑法總論最核心的基石：不法推定罪責。歡迎點擊下方講義查看完整的 6 大案例與互動測驗喔！',
+          tags: ['精華總結', '刑法價值', '法治精神']
+        }
+      ]
+    },
+
+    intermediate: {
+      id: 'intermediate',
+      title: '⚖️ 中級國考體系版',
+      totalSec: 510, // 08:30
+      chapters: [
+        {
+          index: 1,
+          title: '犯罪審查體系綜述：三階層與不法推定罪責',
+          topic: '德日三階論與評價二分',
+          durationSec: 90,
+          durationText: '01:30',
+          icon: '🏛️',
+          box1Title: '不法階層（Unrecht）',
+          box1Desc: '「構成要件該當性 ＋ 違法性」。製造法所不容許風險，客觀確認該行為為法律所不容之「壞事」。',
+          box2Title: '罪責階層（Schuld）',
+          box2Desc: '轉向行為人之主觀非難評價。基於實證經驗，客觀不法該當即推定行為人具備罪責（可非難性）。',
+          takeaway: '先評價行為之客觀不法，再評價行為人之主觀非難！',
+          subtitle: '德日三階論中，構成要件與違法性合稱不法階層。不法該當即確認壞事，並經由經驗推定罪責。',
+          voiceText: '各位同學大家好，歡迎來到刑法總論核心專題。現代刑法學的主流是德日三階層犯罪論體系。不法，是對行為本身的實體評價，行為人是否製造了法不容許風險且無阻卻違法事由？一旦通過不法審查，我們便客觀確認這是一件壞事。而罪責，則是轉向對行為人的個人非難評價。基於實證經驗，多數從事不法行為者具備正常歸責能力，故刑法採取不法推定罪責之運作邏輯，但嚴格保留反證推翻機制。',
+          tags: ['三階層體系', '不法階層', '罪責可非難性']
+        },
+        {
+          index: 2,
+          title: '罪責本質與反證推翻：形式推定與防禦樞紐',
+          topic: '舉證負擔與訴訟防禦',
+          durationSec: 105,
+          durationText: '01:45',
+          icon: '🛡️',
+          box1Title: '審查推論便宜之必要性',
+          box1Desc: '若檢方一開始須主動鉅細靡遺舉證被告精神健全、成年、知法，審判體系將徹底癱瘓。',
+          box2Title: '防禦方實質樞紐',
+          box2Desc: '檢方證明不法後罪責即受形式推定；辯護人提出法定或超法定阻卻/減輕事由，推翻個人受非難之適格性。',
+          takeaway: '不法推定罪責本質為推論便宜，防禦重心在於提出具體事由反證推翻！',
+          subtitle: '「不法推定罪責」是審查上的推論便宜。防禦方的核心正是提出阻卻罪責事由，推翻非難適格性。',
+          voiceText: '請大家特別注意，不法推定罪責並非不可推翻的法律擬制，它本質上是一種審查上的推論便宜。因為如果每一起刑事案件，檢察官一開始都必須主動舉證證明被告精神健全、成年、明知法令，刑事審判體系將徹底癱瘓。故訴訟實務上，只要證明客觀不法，罪責即受形式推定；此時被告與辯護人的防禦重心，正是提出法定的阻卻或減輕罪責事由，主張行為人個人欠缺受非難之實質適格性。',
+          tags: ['形式推定', '推論便宜', '訴訟防禦']
+        },
+        {
+          index: 3,
+          title: '六大抗辯實務要件深度剖析（§16~§20 & 期待可能性）',
+          topic: '法定與超法定抗辯要件',
+          durationSec: 225,
+          durationText: '03:45',
+          icon: '📑',
+          box1Title: '法定責任能力與不法意識',
+          box1Desc: '§16禁止錯誤採責任說（無可避免不罰/可避免得減）；§18年齡三段式；§19精神障礙雙重判準與原因自由行為例外；§20瘖啞人得減。',
+          box2Title: '過當但書與超法定期待可能性',
+          box2Desc: '§23、§24但書防衛/避難過當得減除其刑；超法定阻卻罪責（期待可能性）於客觀通念無法期待適法行為時阻卻罪責。',
+          takeaway: '逐一檢驗條文之生理原因與心理結果，落實罪責嚴格涵攝！',
+          subtitle: '§16禁止錯誤採責任說；§19責任能力須兼具生理與心理要件；§20實務限縮自幼既聾且啞；§23、§24但書為得減免事由。',
+          voiceText: '我們逐一盤點六大抗辯：刑法第 16 條禁止錯誤採責任說，無可避免者不罰，客觀可避免者僅得減輕其刑。第 18 條以 14 歲為絕對責任界線。第 19 條責任能力必須兼具生理原因與心理結果，若故意或過失自陷則落入第 3 項原因自由行為不得免責。第 20 條瘖啞人實務限縮出生或自幼既聾且啞方得減刑。第 23、24 條防衛與避難過當得減輕或免除其刑。最後超法定欠缺期待可能性，於極端壓迫下無適法期待時阻卻罪責。',
+          tags: ['§16禁止錯誤', '§19責任能力', '§20瘖啞', '過當但書']
+        },
+        {
+          index: 4,
+          title: '國考試題實戰解題策略與答題三段論',
+          topic: '實務案例題作答範式',
+          durationSec: 90,
+          durationText: '01:30',
+          icon: '✍️',
+          box1Title: '審查階層嚴格性',
+          box1Desc: '切勿直接跳結論！先寫構成要件與阻卻違法，確認客觀不法後，再於罪責階層檢驗各項抗辯條文。',
+          box2Title: '法律效果精準論述',
+          box2Desc: '明確區分「不罰（不成立犯罪）」與「得減輕其刑」；注意精神障礙不罰時之後續保安處分（監護）宣告問題。',
+          takeaway: '不法奠定基礎、罪責決定非難、抗辯推翻推定，貫徹作答三段論！',
+          subtitle: '國考實例題切勿直接跳結論，務必遵循階層嚴格性，先確認不法，再行逐一涵攝抗辯構成要件。',
+          voiceText: '在國考實例題寫作上，請大家務必遵循階層嚴格性：先寫構成要件與阻卻違法，確認客觀不法；進入罪責階層時，若題目交代精神障礙、年齡、瘖啞或誤信法令，切勿直接跳到結論，而應從條文要件逐一嚴格涵攝。掌握不法奠定基礎、罪責決定非難、抗辯推翻推定的核心架構，任何刑法總則的案例題，你都能迎刃而解！',
+          tags: ['國考作答', '三段論法', '實例演練']
+        }
+      ]
+    },
+
+    advanced: {
+      id: 'advanced',
+      title: '🏛️ 高級法學深究版',
+      totalSec: 840, // 14:00
+      chapters: [
+        {
+          index: 1,
+          title: '規範罪責論之歷史演進：從心理罪責到規範可非難性',
+          topic: '法理溯源與哲學內核',
+          durationSec: 165,
+          durationText: '02:45',
+          icon: '📜',
+          box1Title: '心理罪責論之困境',
+          box1Desc: '李斯特古典學派將罪責侷限於主觀心理連繫（故意/過失），無法合理合理解釋「無期待可能性」或「防衛過當」之免責。',
+          box2Title: '弗蘭克規範罪責論確立',
+          box2Desc: '1907年弗蘭克確立「可非難性 (Vorwerfbarkeit)」：在適法期待下具意志自由卻違反規範，方得加以非難。',
+          takeaway: '罪責的實質不是單純心理聯繫，而是個人之規範可非難性！',
+          subtitle: '李斯特心理罪責論無法解釋期待可能性免責。弗蘭克確立規範罪責論，奠定了現代罪責實質內核。',
+          voiceText: '各位法學先進與研習者，歡迎進入刑法深究專題。19世紀李斯特古典學派的心理罪責論，曾將罪責界定為故意與過失之心理聯繫。然而這種劃分在面對無期待可能性等案件時徹底崩解：行為人具備故意，為何法律卻免除罪責？1907年弗蘭克確立了規範罪責論：罪責的實質是行為人在適法期待下，具備不法意識與意志自由，卻選擇違反規範的個人可非難性。這正是現代實質罪責論的哲學內核。',
+          tags: ['心理罪責論', '規範罪責論', '可非難性']
+        },
+        {
+          index: 2,
+          title: '2022 年刑法第 87 條監護處分重大憲政革新',
+          topic: '憲法審查與人身自由衡平',
+          durationSec: 225,
+          durationText: '03:45',
+          icon: '⚖️',
+          box1Title: '打破5年天花板上限',
+          box1Desc: '修正後§87打破過往5年上限：首次延長3年以下，其後每次1年以下，未設延長次數上限。',
+          box2Title: '嚴格法官保留與每年定期評估',
+          box2Desc: '為避免侵害憲法§8人身自由淪為終身監禁，增設法院每年定期評估與多元社區門診處遇銜接機制。',
+          takeaway: '打破5年上限並落實定期法官保留評估，兼顧社會防衛與人身自由！',
+          subtitle: '2022年刑法§87打破5年天花板，增設每年定期評估與嚴格法官保留，避免變相實質終身監禁。',
+          voiceText: '在 2018 原書講義中，刑法第 87 條明定監護處分不得逾 5 年。2022 年 2 月立法院通過劃時代修法：第一，正式打破 5 年天花板，首次延長 3 年以下，其後每次延長 1 年以下且未設次數上限。第二，為避免演變為實質終身監禁侵害憲法第 8 條人身自由，新法確立嚴格正當法律程序：法院每年均須定期評估再犯危險性，堅守法官保留與專業鑑定。第三，引入門診社區等多元處遇，為保安處分二十年來最重大質變！',
+          tags: ['§87修法', '監護處分', '人身自由', '法官保留']
+        },
+        {
+          index: 3,
+          title: '民法 18 歲成年與少事法「曝險行政先行」法域連動',
+          topic: '跨法域少年刑事政策轉向',
+          durationSec: 180,
+          durationText: '03:00',
+          icon: '🌱',
+          box1Title: '民法18歲成年（2023）',
+          box1Desc: '民法第12條成年年齡由20歲下修為18歲，解決長久以來「刑法18歲完全責任 vs 民法20歲限制行為」之脫鉤。',
+          box2Title: '少事法曝險少年與行政先行',
+          box2Desc: '刪除虞犯改採曝險少年；2023年7月起少輔會輔導先行，落實兒少權利公約（CRC）司法最後手段性。',
+          takeaway: '少年司法從司法矯治轉向保護優先與行政輔導先行！',
+          subtitle: '民法下修18歲消弭責任年齡歧異；少事法以曝險少年取代虞犯，並全面落實行政輔導先行。',
+          voiceText: '緊接著檢視刑法第 18 條的周邊連動。2023 年民法第 12 條成年年齡下修為 18 歲，徹底解決了刑法 18 歲完全責任與民法 20 歲限制行為能力的脫鉤怪象。更加關鍵的是少事法全面刪除具強烈標籤色彩的虞犯概念，改採曝險少年機制；並施行行政輔導先行制度，由少輔會先行介入輔導，落實兒少權利公約最後手段性原則，對少年司法形成了深刻的制度外溢。',
+          tags: ['民法18歲', '少事法', '曝險行政先行', 'CRC公約']
+        },
+        {
+          index: 4,
+          title: '實質罪責論深水區：原因自由行為與期待可能性邊界',
+          topic: '著手理論爭議與憲法罪責原則',
+          durationSec: 180,
+          durationText: '03:00',
+          icon: '⚡',
+          box1Title: '§19第3項原因自由行為爭端',
+          box1Desc: '「構成要件模式」（自陷精神障礙即為著手）與「前置/例外模式」（間接正犯擬制）之學理重大分歧。',
+          box2Title: '期待可能性之憲法位階',
+          box2Desc: '司法實務對超法定事由高度節制，但憲法「無罪責即無刑罰」要求當法律義務迫使陷入無可忍受危難時，應肯定阻卻罪責。',
+          takeaway: '在維護實定法秩序之剛性條文中，永遠保有對人性極限的最高敬意！',
+          subtitle: '原因自由行為存在構成要件模式與例外模式之爭；期待可能性更彰顯憲法罪責原則對刑罰權之實質制約。',
+          voiceText: '最後我們反思實質罪責論的兩個深水區爭點：首先是刑法第 19 條第 3 項的原因自由行為，究竟應採構成要件模式抑或例外前置模式，在罪刑法定原則的張力下爭辯不休。其次是期待可能性之適用界線，司法實務雖抱持節制態度，但憲法法庭歷來闡明無罪責即無刑罰具憲法位階。當法律義務必然導致無可忍受之危難時，實質罪責原則要求我們承認期待可能性的阻卻效力。',
+          tags: ['原因自由行為', '著手模式', '期待可能性邊界']
+        },
+        {
+          index: 5,
+          title: '終極總結：不法推定罪責之跨時代生命力',
+          topic: '全篇統整與法學展望',
+          durationSec: 90,
+          durationText: '01:30',
+          icon: '💎',
+          box1Title: '古典體系歷久彌新',
+          box1Desc: '2018年原書講義兩階段架構在現代法學中依然是實質審查之基石，毫無過時。',
+          box2Title: '結合現代憲政思維',
+          box2Desc: '融入§87監護處分改革、民法18歲成年與實質規範罪責論，形成立體動態法學知識網。',
+          takeaway: '歷經百年演進與現代修法檢驗，不法推定罪責體系歷久彌新！',
+          subtitle: '不法推定罪責體系歷經修法與憲政考驗，其教義歷久彌新。感謝研習！',
+          voiceText: '總結全篇，2018 年原書講義所揭櫫之不法推定罪責兩階段架構，歷經數載法律修訂與憲政檢驗，其本質教義屹立不搖。我們在現代法律科技輔助下，將實體法條文、歷史法理與最新憲政思維融會貫通。感謝大家的聆聽與研習，完整的條文比對表與三階層互動模型已在下方講義系統中完整呈現，歡迎各位深入研讀！',
+          tags: ['全篇總結', '法理沉澱', '法治展望']
+        }
+      ]
+    }
+  };
+
+  // 狀態變數
+  let currentLevelKey = 'beginner';
+  let currentChapterIndex = 0;
+  let isPlaying = false;
+  let currentSpeed = 1.0;
+  let voiceEnabled = true;
+  let timerInterval = null;
+  let chapterElapsedSec = 0;
+
+  // DOM 元素引用
+  const levelTabs = document.querySelectorAll('.video-level-tabs .level-tab');
+  const stageLevelBadge = document.getElementById('stageLevelBadge');
+  const stageChapBadge = document.getElementById('stageChapBadge');
+  const voiceIndicator = document.getElementById('voiceIndicator');
+  const motionCard = document.getElementById('motionCard');
+  const subtitleText = document.getElementById('subtitleText');
+  const videoProgressBar = document.getElementById('videoProgressBar');
+  const videoProgressContainer = document.getElementById('videoProgressContainer');
+  const playToggleBtn = document.getElementById('playToggleBtn');
+  const iconPlay = playToggleBtn ? playToggleBtn.querySelector('.icon-play') : null;
+  const iconPause = playToggleBtn ? playToggleBtn.querySelector('.icon-pause') : null;
+  const prevSlideBtn = document.getElementById('prevSlideBtn');
+  const nextSlideBtn = document.getElementById('nextSlideBtn');
+  const currentTimeDisplay = document.getElementById('currentTime');
+  const totalTimeDisplay = document.getElementById('totalTime');
+  const voiceToggleBtn = document.getElementById('voiceToggleBtn');
+  const speedToggleBtn = document.getElementById('speedToggleBtn');
+  const speedLabel = document.getElementById('speedLabel');
+  const fullscreenToggleBtn = document.getElementById('fullscreenToggleBtn');
+  const videoScreen = document.getElementById('videoScreen');
+  const chaptersList = document.getElementById('chaptersList');
+  const chapCountBadge = document.getElementById('chapCountBadge');
+  const copyCurrentScriptBtn = document.getElementById('copyCurrentScriptBtn');
+
+  // 初始化載入初級版
+  loadLevel('beginner');
+  initEventListeners();
+
+  /* --- 載入指定級別 --- */
+  function loadLevel(levelKey) {
+    if (!videoData[levelKey]) return;
+    pauseVideo();
+    currentLevelKey = levelKey;
+    currentChapterIndex = 0;
+    chapterElapsedSec = 0;
+
+    const currentLevelData = videoData[levelKey];
+
+    // 更新選項卡 Active 狀態
+    levelTabs.forEach(tab => {
+      const isActive = tab.getAttribute('data-level') === levelKey;
+      tab.classList.toggle('active', isActive);
+      tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+    });
+
+    // 更新頂部標籤
+    if (stageLevelBadge) stageLevelBadge.textContent = currentLevelData.title;
+    if (chapCountBadge) chapCountBadge.textContent = `共 ${currentLevelData.chapters.length} 幕`;
+    if (totalTimeDisplay) totalTimeDisplay.textContent = formatTime(currentLevelData.totalSec);
+
+    // 渲染右側章節目錄清單
+    renderChaptersList();
+
+    // 渲染第一分鏡
+    renderCurrentSlide();
+  }
+
+  /* --- 渲染章節清單 --- */
+  function renderChaptersList() {
+    if (!chaptersList) return;
+    const currentLevelData = videoData[currentLevelKey];
+    chaptersList.innerHTML = '';
+
+    currentLevelData.chapters.forEach((chap, idx) => {
+      const item = document.createElement('div');
+      item.className = `chapter-item ${idx === currentChapterIndex ? 'active' : ''}`;
+      item.setAttribute('data-index', idx);
+      item.setAttribute('role', 'listitem');
+
+      const tagsHtml = chap.tags.map(t => `<span class="chap-tag">${t}</span>`).join('');
+
+      item.innerHTML = `
+        <div class="chap-top-row">
+          <span class="chap-idx">第 ${chap.index} 幕</span>
+          <span class="chap-duration">${chap.durationText}</span>
+        </div>
+        <div class="chap-name">${chap.title}</div>
+        <div class="chap-tags">${tagsHtml}</div>
+      `;
+
+      item.addEventListener('click', () => {
+        jumpToChapter(idx);
+      });
+
+      chaptersList.appendChild(item);
+    });
+  }
+
+  /* --- 渲染當前動態分鏡投影片 --- */
+  function renderCurrentSlide() {
+    const currentLevelData = videoData[currentLevelKey];
+    const chap = currentLevelData.chapters[currentChapterIndex];
+    if (!chap || !motionCard) return;
+
+    if (stageChapBadge) {
+      stageChapBadge.textContent = `分鏡 ${chap.index} / ${currentLevelData.chapters.length}`;
+    }
+
+    // 重新觸發動畫
+    motionCard.style.animation = 'none';
+    motionCard.offsetHeight; // trigger reflow
+    motionCard.style.animation = 'slideFadeIn 0.45s ease-out';
+
+    motionCard.innerHTML = `
+      <div class="motion-card-top">
+        <div class="motion-chap-title">
+          <span>${chap.icon}</span>
+          <span>${chap.title}</span>
+        </div>
+        <span class="motion-topic-pill">${chap.topic}</span>
+      </div>
+      <div class="motion-visual-grid">
+        <div class="motion-box">
+          <div class="motion-box-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span>${chap.box1Title}</span>
+          </div>
+          <p class="motion-box-desc">${chap.box1Desc}</p>
+        </div>
+        <div class="motion-box">
+          <div class="motion-box-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <span>${chap.box2Title}</span>
+          </div>
+          <p class="motion-box-desc">${chap.box2Desc}</p>
+        </div>
+      </div>
+      <div class="motion-takeaway">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+        <span>${chap.takeaway}</span>
+      </div>
+    `;
+
+    // 更新字幕
+    if (subtitleText) {
+      subtitleText.textContent = chap.subtitle;
+    }
+
+    // 更新右側選中高亮
+    const items = chaptersList.querySelectorAll('.chapter-item');
+    items.forEach((item, i) => {
+      item.classList.toggle('active', i === currentChapterIndex);
+      if (i === currentChapterIndex) {
+        item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    });
+
+    updateProgressUI();
+  }
+
+  /* --- 跳轉到指定章節 --- */
+  function jumpToChapter(index) {
+    const currentLevelData = videoData[currentLevelKey];
+    if (index < 0 || index >= currentLevelData.chapters.length) return;
+    currentChapterIndex = index;
+    chapterElapsedSec = 0;
+    renderCurrentSlide();
+
+    if (isPlaying) {
+      playSpeechForCurrentChapter();
+    }
+  }
+
+  /* --- 播放控制 --- */
+  function togglePlay() {
+    if (isPlaying) {
+      pauseVideo();
+    } else {
+      playVideo();
+    }
+  }
+
+  function playVideo() {
+    isPlaying = true;
+    if (iconPlay) iconPlay.style.display = 'none';
+    if (iconPause) iconPause.style.display = 'block';
+
+    playSpeechForCurrentChapter();
+    startProgressTimer();
+  }
+
+  function pauseVideo() {
+    isPlaying = false;
+    if (iconPlay) iconPlay.style.display = 'block';
+    if (iconPause) iconPause.style.display = 'none';
+
+    stopSpeech();
+    stopProgressTimer();
+    if (voiceIndicator) {
+      voiceIndicator.classList.remove('speaking');
+    }
+  }
+
+  /* --- 計時器與進度條更新 --- */
+  function startProgressTimer() {
+    stopProgressTimer();
+    const intervalMs = 1000 / currentSpeed;
+    timerInterval = setInterval(() => {
+      chapterElapsedSec++;
+      const currentLevelData = videoData[currentLevelKey];
+      const chap = currentLevelData.chapters[currentChapterIndex];
+
+      if (chapterElapsedSec >= chap.durationSec) {
+        // 本分鏡結束，自動跳轉至下一幕
+        if (currentChapterIndex < currentLevelData.chapters.length - 1) {
+          jumpToChapter(currentChapterIndex + 1);
+        } else {
+          // 全部結束
+          pauseVideo();
+          chapterElapsedSec = 0;
+          updateProgressUI();
+          showToast('🎉 本級別講解影片已全部播放完畢！');
+        }
+      } else {
+        updateProgressUI();
+      }
+    }, intervalMs);
+  }
+
+  function stopProgressTimer() {
+    if (timerInterval) {
+      clearInterval(timerInterval);
+      timerInterval = null;
+    }
+  }
+
+  function updateProgressUI() {
+    const currentLevelData = videoData[currentLevelKey];
+    const chap = currentLevelData.chapters[currentChapterIndex];
+
+    // 計算累計秒數
+    let cumulativeSec = 0;
+    for (let i = 0; i < currentChapterIndex; i++) {
+      cumulativeSec += currentLevelData.chapters[i].durationSec;
+    }
+    cumulativeSec += chapterElapsedSec;
+
+    const percent = Math.min(100, (cumulativeSec / currentLevelData.totalSec) * 100);
+    if (videoProgressBar) {
+      videoProgressBar.style.width = `${percent}%`;
+    }
+    if (currentTimeDisplay) {
+      currentTimeDisplay.textContent = formatTime(cumulativeSec);
+    }
+  }
+
+  /* --- Web Speech API 語音朗讀合成 --- */
+  function playSpeechForCurrentChapter() {
+    stopSpeech();
+
+    if (!voiceEnabled || !('speechSynthesis' in window)) {
+      if (voiceIndicator) {
+        voiceIndicator.classList.remove('speaking');
+        voiceIndicator.classList.toggle('muted', !voiceEnabled);
+      }
+      return;
+    }
+
+    const chap = videoData[currentLevelKey].chapters[currentChapterIndex];
+    if (!chap || !chap.voiceText) return;
+
+    try {
+      const utterance = new SpeechSynthesisUtterance(chap.voiceText);
+      utterance.lang = 'zh-TW';
+      utterance.rate = currentSpeed;
+      utterance.pitch = 1.0;
+
+      // 嘗試選取中文語音包
+      const voices = window.speechSynthesis.getVoices();
+      const zhVoice = voices.find(v => v.lang.includes('zh-TW') || v.lang.includes('zh'));
+      if (zhVoice) {
+        utterance.voice = zhVoice;
+      }
+
+      utterance.onstart = () => {
+        if (voiceIndicator) {
+          voiceIndicator.classList.add('speaking');
+          voiceIndicator.classList.remove('muted');
+        }
+      };
+
+      utterance.onend = () => {
+        if (voiceIndicator) {
+          voiceIndicator.classList.remove('speaking');
+        }
+      };
+
+      utterance.onerror = () => {
+        if (voiceIndicator) {
+          voiceIndicator.classList.remove('speaking');
+        }
+      };
+
+      window.speechSynthesis.speak(utterance);
+    } catch (e) {
+      console.warn('Speech synthesis not available or blocked:', e);
+    }
+  }
+
+  function stopSpeech() {
+    if ('speechSynthesis' in window) {
+      try {
+        window.speechSynthesis.cancel();
+      } catch (e) {}
+    }
+  }
+
+  /* --- 事件監聽註冊 --- */
+  function initEventListeners() {
+    // 級別標籤切換
+    levelTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const levelKey = tab.getAttribute('data-level');
+        if (levelKey !== currentLevelKey) {
+          loadLevel(levelKey);
+          showToast(`已切換為：${videoData[levelKey].title}`);
+        }
+      });
+    });
+
+    // 播放 / 暫停按鈕
+    if (playToggleBtn) {
+      playToggleBtn.addEventListener('click', togglePlay);
+    }
+
+    // 上一分鏡
+    if (prevSlideBtn) {
+      prevSlideBtn.addEventListener('click', () => {
+        if (currentChapterIndex > 0) {
+          jumpToChapter(currentChapterIndex - 1);
+        } else {
+          showToast('目前已經是第一幕');
+        }
+      });
+    }
+
+    // 下一分鏡
+    if (nextSlideBtn) {
+      nextSlideBtn.addEventListener('click', () => {
+        const currentLevelData = videoData[currentLevelKey];
+        if (currentChapterIndex < currentLevelData.chapters.length - 1) {
+          jumpToChapter(currentChapterIndex + 1);
+        } else {
+          showToast('目前已經是最後一幕');
+        }
+      });
+    }
+
+    // 進度條點擊跳轉
+    if (videoProgressContainer) {
+      videoProgressContainer.addEventListener('click', (e) => {
+        const rect = videoProgressContainer.getBoundingClientRect();
+        const clickX = e.clientX - rect.left;
+        const width = rect.width;
+        const ratio = Math.max(0, Math.min(1, clickX / width));
+
+        const currentLevelData = videoData[currentLevelKey];
+        const targetSec = ratio * currentLevelData.totalSec;
+
+        // 計算該秒數落在哪一個章節
+        let accumulated = 0;
+        for (let i = 0; i < currentLevelData.chapters.length; i++) {
+          const ch = currentLevelData.chapters[i];
+          if (targetSec <= accumulated + ch.durationSec || i === currentLevelData.chapters.length - 1) {
+            currentChapterIndex = i;
+            chapterElapsedSec = Math.floor(targetSec - accumulated);
+            renderCurrentSlide();
+            if (isPlaying) {
+              playSpeechForCurrentChapter();
+              startProgressTimer();
+            }
+            break;
+          }
+          accumulated += ch.durationSec;
+        }
+      });
+    }
+
+    // 語音開關切換
+    if (voiceToggleBtn) {
+      voiceToggleBtn.addEventListener('click', () => {
+        voiceEnabled = !voiceEnabled;
+        voiceToggleBtn.classList.toggle('active', voiceEnabled);
+        if (voiceIndicator) {
+          voiceIndicator.classList.toggle('muted', !voiceEnabled);
+          if (!voiceEnabled) voiceIndicator.classList.remove('speaking');
+        }
+
+        if (voiceEnabled) {
+          showToast('🔊 語音旁白朗讀已開啟');
+          if (isPlaying) playSpeechForCurrentChapter();
+        } else {
+          stopSpeech();
+          showToast('🔇 語音旁白已靜音');
+        }
+      });
+      // 預設高亮開啟
+      voiceToggleBtn.classList.add('active');
+    }
+
+    // 倍速切換 (1.0x -> 1.25x -> 1.5x)
+    if (speedToggleBtn && speedLabel) {
+      const speeds = [1.0, 1.25, 1.5];
+      speedToggleBtn.addEventListener('click', () => {
+        const currentIdx = speeds.indexOf(currentSpeed);
+        const nextIdx = (currentIdx + 1) % speeds.length;
+        currentSpeed = speeds[nextIdx];
+        speedLabel.textContent = `${currentSpeed.toFixed(1).replace('.0', '')}x`;
+        showToast(`播放倍速：${speedLabel.textContent}`);
+
+        if (isPlaying) {
+          startProgressTimer();
+          playSpeechForCurrentChapter();
+        }
+      });
+    }
+
+    // 全螢幕切換
+    if (fullscreenToggleBtn && videoScreen) {
+      fullscreenToggleBtn.addEventListener('click', () => {
+        if (!document.fullscreenElement) {
+          if (videoScreen.requestFullscreen) {
+            videoScreen.requestFullscreen().catch(() => {
+              videoScreen.classList.toggle('fullscreen-active');
+            });
+          } else {
+            videoScreen.classList.toggle('fullscreen-active');
+          }
+        } else {
+          if (document.exitFullscreen) {
+            document.exitFullscreen();
+          }
+          videoScreen.classList.remove('fullscreen-active');
+        }
+      });
+    }
+
+    // 複製本幕逐字稿
+    if (copyCurrentScriptBtn) {
+      copyCurrentScriptBtn.addEventListener('click', () => {
+        const chap = videoData[currentLevelKey].chapters[currentChapterIndex];
+        if (chap && chap.voiceText) {
+          navigator.clipboard.writeText(chap.voiceText).then(() => {
+            showToast('📋 已複製本分鏡逐字口播台詞至剪貼簿！');
+          }).catch(() => {
+            showToast('台詞複製失敗，請手動選取');
+          });
+        }
+      });
+    }
+
+    // 鍵盤空白鍵與方向鍵操控
+    document.addEventListener('keydown', (e) => {
+      // 僅在非輸入框狀態下攔截
+      if (['input', 'textarea'].includes(document.activeElement.tagName.toLowerCase())) {
+        return;
+      }
+      if (e.code === 'Space') {
+        const videoRect = container.getBoundingClientRect();
+        // 若播放器在可視範圍內則攔截
+        if (videoRect.top < window.innerHeight && videoRect.bottom > 0) {
+          e.preventDefault();
+          togglePlay();
+        }
+      } else if (e.key === 'ArrowRight' && (e.ctrlKey || e.altKey)) {
+        const currentLevelData = videoData[currentLevelKey];
+        if (currentChapterIndex < currentLevelData.chapters.length - 1) {
+          e.preventDefault();
+          jumpToChapter(currentChapterIndex + 1);
+        }
+      } else if (e.key === 'ArrowLeft' && (e.ctrlKey || e.altKey)) {
+        if (currentChapterIndex > 0) {
+          e.preventDefault();
+          jumpToChapter(currentChapterIndex - 1);
+        }
+      }
+    });
+  }
+
+  /* --- 時間格式化 helper (03:45) --- */
+  function formatTime(totalSec) {
+    const m = Math.floor(totalSec / 60);
+    const s = Math.floor(totalSec % 60);
+    const mm = m < 10 ? `0${m}` : `${m}`;
+    const ss = s < 10 ? `0${s}` : `${s}`;
+    return `${mm}:${ss}`;
+  }
+}
+

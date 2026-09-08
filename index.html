@@ -32,6 +32,7 @@
       </a>
 
       <nav class="nav-links">
+        <a href="#section-video" class="nav-link nav-link-highlight">🎬 影音微課</a>
         <a href="#section-core" class="nav-link">核心思維</a>
         <a href="#section-cases" class="nav-link">6大案例</a>
         <a href="#section-table" class="nav-link">綜合速查表</a>
@@ -98,6 +99,155 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
           <span>涵蓋法條：刑法 §16、§18、§19、§20、§23、§24、§87</span>
         </div>
+      </div>
+    </section>
+
+    <!-- 影音講解微課：互動動態播放器（初級／中級／高級） -->
+    <section id="section-video" class="content-section video-section">
+      <div class="section-header">
+        <div class="section-number">影</div>
+        <div>
+          <div class="video-section-badge">
+            <span class="live-dot"></span> 互動微課視訊系統 • 3大分級精講
+          </div>
+          <h2 class="section-title">核心體系影音動態微課：初級・中級・高級</h2>
+          <p class="section-desc">透過現代動態分鏡視訊、實時字幕與智慧語音導覽，循序漸進掌握「不法推定罪責」體系</p>
+        </div>
+      </div>
+
+      <!-- 級別切換選項卡 (Level Selector Tabs) -->
+      <div class="video-level-tabs" role="tablist">
+        <button class="level-tab active" data-level="beginner" role="tab" aria-selected="true">
+          <span class="tab-icon">🌱</span>
+          <span class="tab-info">
+            <span class="tab-title">初級版：生活情境劇入門</span>
+            <span class="tab-meta">適合初學與公民課 • 4大分鏡情境</span>
+          </span>
+        </button>
+        <button class="level-tab" data-level="intermediate" role="tab" aria-selected="false">
+          <span class="tab-icon">⚖️</span>
+          <span class="tab-info">
+            <span class="tab-title">中級版：國考與法學體系精講</span>
+            <span class="tab-meta">適合法律系與國考 • 三階與6大抗辯</span>
+          </span>
+        </button>
+        <button class="level-tab" data-level="advanced" role="tab" aria-selected="false">
+          <span class="tab-icon">🏛️</span>
+          <span class="tab-info">
+            <span class="tab-title">高級版：法學深究與最新憲判修法</span>
+            <span class="tab-meta">適合法研所與司律 • 規範罪責與§87革新</span>
+          </span>
+        </button>
+      </div>
+
+      <!-- 播放器主容器 -->
+      <div class="video-player-container" id="videoPlayerContainer">
+        <!-- 左側：動態視訊舞台 (16:9 Stage) -->
+        <div class="video-screen-wrapper">
+          <div class="video-screen" id="videoScreen">
+            <!-- 頂部資訊列 (Stage Header) -->
+            <div class="stage-header">
+              <div class="stage-tag-group">
+                <span class="stage-badge-level" id="stageLevelBadge">🌱 初級生活情境版</span>
+                <span class="stage-badge-chap" id="stageChapBadge">分鏡 1 / 4</span>
+              </div>
+              <div class="stage-voice-indicator" id="voiceIndicator" title="語音導覽狀態">
+                <span class="sound-wave"></span>
+                <span class="sound-wave"></span>
+                <span class="sound-wave"></span>
+                <span class="sound-text">AI 語音旁白就緒</span>
+              </div>
+            </div>
+
+            <!-- 中央動態畫布 (Motion Canvas & Graphic Cards) -->
+            <div class="stage-canvas" id="stageCanvas">
+              <!-- 動態分鏡卡片 (由 JS 依章節即時注入與切換動畫) -->
+              <div class="motion-card" id="motionCard">
+                <!-- 動態注入內容 -->
+              </div>
+            </div>
+
+            <!-- 字幕浮動面板 (Subtitles Overlay) -->
+            <div class="subtitles-panel" id="subtitlesPanel">
+              <div class="subtitle-badge">即時旁白字幕</div>
+              <p class="subtitle-text" id="subtitleText">點擊下方播放鈕，開始為您進行本章節影音動畫講解...</p>
+            </div>
+
+            <!-- 底部播放控制列 (Player Control Bar) -->
+            <div class="player-controls">
+              <!-- 進度條 -->
+              <div class="progress-bar-container" id="videoProgressContainer" title="點擊跳轉進度">
+                <div class="progress-bar-bg">
+                  <div class="progress-bar-fill" id="videoProgressBar"></div>
+                </div>
+              </div>
+
+              <!-- 按鈕工具列 -->
+              <div class="control-buttons-row">
+                <div class="ctrl-group-left">
+                  <!-- 上一幕 -->
+                  <button class="ctrl-btn" id="prevSlideBtn" title="上一分鏡 (←)" aria-label="上一分鏡">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5"/></svg>
+                  </button>
+                  <!-- 播放/暫停主按鈕 -->
+                  <button class="ctrl-btn btn-play" id="playToggleBtn" title="播放 / 暫停 (空白鍵)" aria-label="播放">
+                    <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor" style="display:none;"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+                  </button>
+                  <!-- 下一幕 -->
+                  <button class="ctrl-btn" id="nextSlideBtn" title="下一分鏡 (→)" aria-label="下一分鏡">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
+                  </button>
+                  <!-- 時間顯示 -->
+                  <div class="time-display">
+                    <span id="currentTime">00:00</span> / <span id="totalTime">03:45</span>
+                  </div>
+                </div>
+
+                <div class="ctrl-group-right">
+                  <!-- 語音朗讀開關 -->
+                  <button class="ctrl-btn btn-text" id="voiceToggleBtn" title="開啟/關閉中文語音導覽朗讀">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                    <span class="ctrl-label">語音旁白</span>
+                  </button>
+                  <!-- 語速選擇 -->
+                  <button class="ctrl-btn btn-text" id="speedToggleBtn" title="切換播放倍速">
+                    <span id="speedLabel">1.0x</span>
+                  </button>
+                  <!-- 全螢幕切換 -->
+                  <button class="ctrl-btn" id="fullscreenToggleBtn" title="全螢幕劇院模式" aria-label="全螢幕">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 右側：分鏡章節目錄與逐字講稿 -->
+        <aside class="video-sidebar">
+          <div class="sidebar-header">
+            <h3 class="sidebar-title">📑 分鏡目錄與考點</h3>
+            <span class="sidebar-badge" id="chapCountBadge">共 4 幕</span>
+          </div>
+
+          <!-- 章節列表 -->
+          <div class="chapters-list" id="chaptersList" role="list">
+            <!-- 由 JS 自動渲染對應級別的章節卡片 -->
+          </div>
+
+          <!-- 側欄底部功能列 -->
+          <div class="sidebar-footer">
+            <button class="btn-sidebar-action" id="copyCurrentScriptBtn" title="複製當前分鏡逐字口播台詞">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+              <span>複製本幕口播稿</span>
+            </button>
+            <a href="VIDEO_SCRIPTS.md" target="_blank" class="btn-sidebar-action secondary" title="在新視窗開啟完整分鏡製作劇本手冊">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+              <span>完整劇本手冊</span>
+            </a>
+          </div>
+        </aside>
       </div>
     </section>
 
@@ -681,6 +831,7 @@
       <div class="footer-links">
         <div class="footer-link-group">
           <span class="group-title">快速導覽</span>
+          <a href="#section-video">🎬 影音動態微課</a>
           <a href="#section-core">核心法律思維</a>
           <a href="#section-cases">6大抗辯案例</a>
           <a href="#section-table">綜合速查表</a>
@@ -688,7 +839,8 @@
           <a href="#section-quiz">法學觀念測驗</a>
         </div>
         <div class="footer-link-group">
-          <span class="group-title">GitHub Pages 發布</span>
+          <span class="group-title">教學素材與發布</span>
+          <a href="VIDEO_SCRIPTS.md" target="_blank">分鏡製作劇本 (VIDEO_SCRIPTS)</a>
           <a href="README.md" target="_blank">部署說明文件 (README)</a>
           <a href="https://github.com" target="_blank" rel="noopener">GitHub 官網</a>
         </div>
