@@ -3,6 +3,10 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+  // 優先啟動分頁/目錄路由控制器，確保版面依據網址正確渲染
+  initChapterRouter();
+
+  // 其他互動模組初始化
   initTheme();
   initReadingProgress();
   initBackToTop();
@@ -1990,6 +1994,8 @@ function initMobileMenu() {
   if (sections.length > 0) {
     let scrollTimeout;
     window.addEventListener('scroll', () => {
+      // 僅在全文展開模式下啟用滾動監聽聯動高亮
+      if (!document.body.classList.contains('view-mode-all')) return;
       if (scrollTimeout) return;
       scrollTimeout = setTimeout(() => {
         scrollTimeout = null;
@@ -2025,6 +2031,219 @@ function initMobileMenu() {
       }, 80);
     }, { passive: true });
   }
+}
+
+/* =========================================================
+   12. 章節分頁導航路由器 (Chapter-View Routing System)
+   實現：第一頁只有基本目錄，點超連結才到其他章節內容
+   ========================================================= */
+function initChapterRouter() {
+  const sectionIds = [
+    'section-video',
+    'section-core',
+    'section-cases',
+    'section-table',
+    'section-summary',
+    'section-quiz'
+  ];
+
+  // 爭點與錨點歸屬章節對照表
+  const anchorToSectionMap = {
+    'section-video': 'section-video',
+    'section-core': 'section-core',
+    'flowStep1': 'section-core',
+    'flowStep2': 'section-core',
+    'rebuttalBox': 'section-core',
+    'section-cases': 'section-cases',
+    'case-1': 'section-cases',
+    'case-2': 'section-cases',
+    'case-3': 'section-cases',
+    'case-4': 'section-cases',
+    'case-5': 'section-cases',
+    'case-6': 'section-cases',
+    'case-7': 'section-cases',
+    'case-8': 'section-cases',
+    'case-9': 'section-cases',
+    'case-10': 'section-cases',
+    'case-11': 'section-cases',
+    'case-12': 'section-cases',
+    'section-table': 'section-table',
+    'section-summary': 'section-summary',
+    'section-quiz': 'section-quiz'
+  };
+
+  const desktopNavLinks = document.querySelectorAll('.nav-links .nav-link');
+  const bottomBarItems = document.querySelectorAll('.mobile-bottom-bar .bottom-bar-item:not(.btn-trigger)');
+  const viewModeToggleBtn = document.getElementById('viewModeToggleBtn');
+
+  // 當前模式：'toc' (預設第一頁純目錄), 'chapter' (章節內頁), 'all' (全文展開)
+  let currentMode = 'toc';
+
+  function updateNavActive(activeId) {
+    desktopNavLinks.forEach(link => {
+      const href = link.getAttribute('href') || '';
+      if (href === `#${activeId}` || (activeId === 'section-hero' && href === '#section-hero')) {
+        link.classList.add('active');
+      } else {
+        link.classList.remove('active');
+      }
+    });
+
+    bottomBarItems.forEach(item => {
+      const href = item.getAttribute('href') || '';
+      if (href === `#${activeId}` || (activeId === 'section-hero' && href === '#section-hero')) {
+        item.classList.add('active');
+      } else {
+        item.classList.remove('active');
+      }
+    });
+  }
+
+  // 切換至第一頁純目錄模式
+  function showTocView() {
+    currentMode = 'toc';
+    document.body.classList.remove('view-mode-chapter', 'view-mode-all');
+    document.body.classList.add('view-mode-toc');
+
+    sectionIds.forEach(id => {
+      const sec = document.getElementById(id);
+      if (sec) sec.classList.remove('active-chapter');
+    });
+
+    updateNavActive('section-hero');
+
+    if (viewModeToggleBtn) {
+      viewModeToggleBtn.innerHTML = '<span class="mode-icon">📑</span><span class="mode-text">分頁閱讀</span>';
+      viewModeToggleBtn.title = '當前：第一頁純目錄分頁模式。點擊可切換為全文展開連續閱讀';
+    }
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // 切換至特定章節閱讀模式
+  function showChapterView(targetId) {
+    currentMode = 'chapter';
+    document.body.classList.remove('view-mode-toc', 'view-mode-all');
+    document.body.classList.add('view-mode-chapter');
+
+    const parentSectionId = anchorToSectionMap[targetId] || (sectionIds.includes(targetId) ? targetId : null);
+
+    if (!parentSectionId) {
+      showTocView();
+      return;
+    }
+
+    sectionIds.forEach(id => {
+      const sec = document.getElementById(id);
+      if (!sec) return;
+      if (id === parentSectionId) {
+        sec.classList.add('active-chapter');
+      } else {
+        sec.classList.remove('active-chapter');
+      }
+    });
+
+    updateNavActive(parentSectionId);
+
+    if (viewModeToggleBtn) {
+      viewModeToggleBtn.innerHTML = '<span class="mode-icon">📑</span><span class="mode-text">分頁閱讀</span>';
+      viewModeToggleBtn.title = '當前：章節分頁閱讀模式。點擊可切換為全文展開連續閱讀';
+    }
+
+    // 若點選的是微課視訊，觸發視訊舞台重繪
+    if (parentSectionId === 'section-video' && typeof drawCurrentSlide === 'function') {
+      setTimeout(() => drawCurrentSlide(), 60);
+    }
+
+    // 平滑滾動定位
+    setTimeout(() => {
+      if (targetId && targetId !== parentSectionId) {
+        const targetEl = document.getElementById(targetId);
+        if (targetEl) {
+          targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          targetEl.classList.add('pulse-focus');
+          setTimeout(() => targetEl.classList.remove('pulse-focus'), 2200);
+          return;
+        }
+      }
+      // 置頂進入章節
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 60);
+  }
+
+  // 切換至全文展開模式
+  function showAllView() {
+    currentMode = 'all';
+    document.body.classList.remove('view-mode-toc', 'view-mode-chapter');
+    document.body.classList.add('view-mode-all');
+
+    sectionIds.forEach(id => {
+      const sec = document.getElementById(id);
+      if (sec) sec.classList.add('active-chapter');
+    });
+
+    if (viewModeToggleBtn) {
+      viewModeToggleBtn.innerHTML = '<span class="mode-icon">📜</span><span class="mode-text">全文展開</span>';
+      viewModeToggleBtn.title = '當前：全文展開連續閱讀模式。點擊可切換回分頁純目錄模式';
+    }
+  }
+
+  // 路由處理器
+  function handleRoute() {
+    const rawHash = window.location.hash.replace('#', '').trim();
+    if (!rawHash || rawHash === 'section-hero' || rawHash === 'cover-toc' || rawHash === 'home' || rawHash === 'toc') {
+      showTocView();
+    } else if (anchorToSectionMap[rawHash]) {
+      showChapterView(rawHash);
+    } else {
+      showTocView();
+    }
+  }
+
+  // 閱讀模式切換按鈕點擊
+  if (viewModeToggleBtn) {
+    viewModeToggleBtn.addEventListener('click', () => {
+      if (currentMode === 'all') {
+        showTocView();
+        history.pushState(null, '', '#section-hero');
+        showToast('📑 已切換為第一頁純目錄分頁模式');
+      } else {
+        showAllView();
+        showToast('📜 已切換為全文展開模式（所有章節一覽）');
+      }
+    });
+  }
+
+  // 攔截所有內部錨點超連結
+  document.addEventListener('click', (e) => {
+    const anchor = e.target.closest('a[href^="#"]');
+    if (!anchor) return;
+
+    const href = anchor.getAttribute('href');
+    if (!href) return;
+    const targetId = href.replace('#', '').trim();
+
+    // 點擊回到首頁目錄
+    if (targetId === 'section-hero' || targetId === 'cover-toc' || targetId === 'home') {
+      e.preventDefault();
+      history.pushState(null, '', '#section-hero');
+      showTocView();
+      return;
+    }
+
+    // 點擊章節或爭點超連結
+    if (anchorToSectionMap[targetId]) {
+      e.preventDefault();
+      history.pushState(null, '', `#${targetId}`);
+      showChapterView(targetId);
+    }
+  });
+
+  // 監聽瀏覽器前進/後退鍵
+  window.addEventListener('hashchange', handleRoute);
+
+  // 初始載入路由判定
+  handleRoute();
 }
 
 

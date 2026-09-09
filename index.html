@@ -13,7 +13,7 @@
   
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body class="view-mode-toc">
   <!-- 頂部進度條 -->
   <div id="readingProgress" class="reading-progress"></div>
 
@@ -32,7 +32,7 @@
       </a>
 
       <nav class="nav-links">
-        <a href="#section-hero" class="nav-link active" id="navLinkHome">🏠 首頁</a>
+        <a href="#section-hero" class="nav-link active" id="navLinkHome">🏠 首頁目錄</a>
         <a href="#section-video" class="nav-link nav-link-highlight">🎬 影音微課</a>
         <a href="#section-core" class="nav-link">核心思維</a>
         <a href="#section-cases" class="nav-link">12大經典案例</a>
@@ -42,6 +42,12 @@
       </nav>
 
       <div class="nav-actions">
+        <!-- 閱讀模式切換按鈕 (分頁閱讀 / 全文連續) -->
+        <button id="viewModeToggleBtn" class="btn-text-pill" title="切換模式：章節分頁閱讀（預設）／全文連續瀏覽" aria-label="切換閱讀模式">
+          <span class="mode-icon">📑</span>
+          <span class="mode-text">分頁閱讀</span>
+        </button>
+
         <!-- 搜尋觸發按鈕 -->
         <button id="searchTriggerBtn" class="btn-icon" title="搜尋抗辯事由" aria-label="搜尋">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -93,7 +99,14 @@
             <span class="drawer-link-icon">🏠</span>
             <span class="drawer-link-text">
               <strong>講義首頁</strong>
-              <small>體系總覽・學習地圖與導讀傳送門</small>
+              <small>體系總覽・學習地圖與封面</small>
+            </span>
+          </a>
+          <a href="#cover-toc" class="mobile-drawer-link">
+            <span class="drawer-link-icon">📑</span>
+            <span class="drawer-link-text">
+              <strong>講義全書研讀目錄</strong>
+              <small>5 大核心篇章・12 大案例索引</small>
             </span>
           </a>
           <a href="#section-video" class="mobile-drawer-link">
@@ -178,93 +191,448 @@
         </div>
       </div>
 
-      <!-- 醒目影片播放快捷入口卡片 -->
-      <div class="hero-video-cta-card">
-        <div class="cta-card-left">
-          <div class="cta-video-thumb">
-            <div class="thumb-play-icon">▶</div>
-            <span class="thumb-badge">4大版本</span>
+      <!-- 講義全書研讀目錄 (Cover Table of Contents) -->
+      <div class="cover-toc-card" id="cover-toc">
+        <div class="toc-header">
+          <div class="toc-title-group">
+            <span class="toc-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10M6 10h10"/></svg>
+              講義全書研讀目錄 • Table of Contents
+            </span>
+            <h2 class="toc-main-title">全書章節目次與實務爭點索引</h2>
+            <p class="toc-subtitle">收錄 5 大核心篇章、12 大抗辯案例、4 級分層影音微課與考點速測導航</p>
           </div>
-          <div class="cta-info">
-            <span class="cta-tag">🎬 影音講解微課已就緒</span>
-            <h3 class="cta-title">點擊立即觀看「不法推定罪責」分級講解影片</h3>
-            <p class="cta-desc">提供 🌱 初級生活情境劇（3分半）｜ ⚖️ 中級國考體系（8分半）｜ 🏛️ 高級憲政深究（14分鐘）｜ ⚔️ 案例特輯</p>
+          <div class="toc-stats-badges">
+            <span class="toc-stat-pill"><strong id="tocChapterCount">5</strong> 大核心篇章</span>
+            <span class="toc-stat-pill"><strong id="tocCaseCount">12</strong> 大抗辯案例</span>
+            <span class="toc-stat-pill"><strong>4</strong> 級影音微課</span>
           </div>
         </div>
-        <div class="cta-card-right">
-          <a href="#section-video" class="btn-hero-watch" id="heroWatchVideoBtn">
-            <span>▶ 立即播放影片</span>
-          </a>
-          <a href="video.html" class="btn-hero-theater" target="_blank" title="在新分頁開啟全螢幕獨立放映廳">
-            <span>獨立放映廳 ↗</span>
-          </a>
+
+        <!-- 爭點秒速傳送門 (Hot Topics Quick Jump Chips) -->
+        <div class="toc-quick-jump">
+          <div class="quick-jump-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            <span>高頻考點秒速直達：</span>
+          </div>
+          <div class="quick-jump-chips">
+            <a href="#case-11" class="toc-chip chip-red" title="跳轉至 案例 1-11 櫻桃案">
+              <span class="chip-dot"></span> 🍒 櫻桃案（防衛權濫用）
+            </a>
+            <a href="#case-12" class="toc-chip chip-red" title="跳轉至 案例 1-12 強抽輸血案">
+              <span class="chip-dot"></span> 🩸 強抽輸血案（人性尊嚴）
+            </a>
+            <a href="#case-9" class="toc-chip chip-cyan" title="跳轉至 案例 1-9 黑白猜打巴掌案">
+              <span class="chip-dot"></span> ✌️ 黑白猜（被害人承諾）
+            </a>
+            <a href="#case-10" class="toc-chip chip-cyan" title="跳轉至 案例 1-10 火海救子案">
+              <span class="chip-dot"></span> 🔥 火海救子（義務衝突）
+            </a>
+            <a href="#case-3" class="toc-chip chip-amber" title="跳轉至 案例 1-3 精神障礙與§87改革">
+              <span class="chip-dot"></span> 🧠 §19 / §87 精神與監護處分
+            </a>
+            <a href="#case-1" class="toc-chip chip-blue" title="跳轉至 案例 1-1 欠缺不法意識">
+              <span class="chip-dot"></span> §16 禁止錯誤
+            </a>
+            <a href="#case-2" class="toc-chip chip-blue" title="跳轉至 案例 1-2 責任年齡與少事法">
+              <span class="chip-dot"></span> §18 責任年齡 / 少事法
+            </a>
+            <a href="#case-4" class="toc-chip chip-blue" title="跳轉至 案例 1-4 瘖啞人生理缺陷">
+              <span class="chip-dot"></span> §20 瘖啞人
+            </a>
+            <a href="#case-5" class="toc-chip chip-blue" title="跳轉至 案例 1-5 防衛避難過當">
+              <span class="chip-dot"></span> §23/§24 但書過當
+            </a>
+            <a href="#case-6" class="toc-chip chip-blue" title="跳轉至 案例 1-6 欠缺期待可能性">
+              <span class="chip-dot"></span> 期待可能性
+            </a>
+            <a href="#case-7" class="toc-chip chip-blue" title="跳轉至 案例 1-7 依法令行為">
+              <span class="chip-dot"></span> §21 法令與公務命令
+            </a>
+          </div>
         </div>
-      </div>
 
-      <!-- 首頁快捷學習導讀傳送門 (Home Quick Learning Portal) -->
-      <div class="home-portal-section">
-        <div class="portal-header">
-          <span class="portal-header-title">🧭 首頁導讀 • 4 大核心學習傳送門</span>
-          <span class="portal-header-tag">點擊卡片直達章節</span>
-        </div>
-        <div class="home-portal-grid">
-          <a href="#section-video" class="portal-card" title="跳轉至影音動態微課">
-            <div class="portal-card-top">
-              <span class="portal-card-icon amber">🎬</span>
-              <span class="portal-card-badge">4大版本</span>
+        <!-- 目錄結構網格 (TOC Multi-Column Grid) -->
+        <div class="toc-grid">
+          
+          <!-- 導讀單元：影音微課 -->
+          <div class="toc-chapter-box highlight-border">
+            <div class="toc-chap-header">
+              <div class="chap-badge-wrap">
+                <span class="chap-num-badge amber">影</span>
+                <span class="chap-scope-tag">導讀與微課視訊</span>
+              </div>
+              <a href="#section-video" class="chap-jump-link" title="前往影音微課單元">
+                直達單元 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+              </a>
             </div>
-            <h4 class="portal-card-title">影音動態微課</h4>
-            <p class="portal-card-desc">初級生活劇、中級國考體系、高級憲判與案例特輯全分鏡放映</p>
-            <div class="portal-card-action">
-              <span>立即收看</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+            <h3 class="toc-chap-title">
+              <a href="#section-video">核心體系影音動態微課：初級・中級・高級・案例特輯</a>
+            </h3>
+            <p class="toc-chap-summary">
+              以 60fps 動態律法天秤動畫、即時逐句字幕與高音質中文語音，分級循序透析刑法總論思維。
+            </p>
+            <ul class="toc-sub-list">
+              <li>
+                <a href="#section-video" class="toc-sub-item">
+                  <span class="toc-item-dot"></span>
+                  <span class="toc-item-title">🌱 初級生活情境劇：做壞事 vs 壞人（約 3.5 分鐘）</span>
+                  <span class="toc-item-tag">生活入門</span>
+                </a>
+              </li>
+              <li>
+                <a href="#section-video" class="toc-sub-item">
+                  <span class="toc-item-dot"></span>
+                  <span class="toc-item-title">⚖️ 中級國考體系精講：三階論與不法推定罪責（約 8.5 分鐘）</span>
+                  <span class="toc-item-tag">國考推薦</span>
+                </a>
+              </li>
+              <li>
+                <a href="#section-video" class="toc-sub-item">
+                  <span class="toc-item-dot"></span>
+                  <span class="toc-item-title">🏛️ 高級憲政深究：規範罪責論與 §87 監護革新（約 14 分鐘）</span>
+                  <span class="toc-item-tag">司律法研</span>
+                </a>
+              </li>
+              <li>
+                <a href="#section-video" class="toc-sub-item">
+                  <span class="toc-item-dot"></span>
+                  <span class="toc-item-title">⚔️ 案例特輯：櫻桃案・輸血案・黑白猜・義務衝突（約 7.5 分鐘）</span>
+                  <span class="toc-item-tag">爭端特輯</span>
+                </a>
+              </li>
+            </ul>
+            <div class="toc-chap-footer">
+              <a href="video.html" target="_blank" class="toc-chap-ext-link">
+                <span>🎥 獨立全螢幕放映廳 ↗</span>
+              </a>
+              <a href="VIDEO_SCRIPTS.md" target="_blank" class="toc-chap-ext-link">
+                <span>📖 影音分鏡製作劇本 ↗</span>
+              </a>
             </div>
-          </a>
+          </div>
 
-          <a href="#section-core" class="portal-card" title="跳轉至核心法律思維">
-            <div class="portal-card-top">
-              <span class="portal-card-icon blue">⚖️</span>
-              <span class="portal-card-badge">體系關鍵</span>
+          <!-- 第一篇：核心法律思維 -->
+          <div class="toc-chapter-box">
+            <div class="toc-chap-header">
+              <div class="chap-badge-wrap">
+                <span class="chap-num-badge blue">壹</span>
+                <span class="chap-scope-tag">法理基石</span>
+              </div>
+              <a href="#section-core" class="chap-jump-link" title="前往核心法律思維">
+                直達篇章 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+              </a>
             </div>
-            <h4 class="portal-card-title">核心法律思維</h4>
-            <p class="portal-card-desc">目的犯罪論主客觀構造、法秩序實質正當化與三階論流程</p>
-            <div class="portal-card-action">
-              <span>深入研讀</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
-            </div>
-          </a>
+            <h3 class="toc-chap-title">
+              <a href="#section-core">核心法律思維：什麼是犯罪？</a>
+            </h3>
+            <p class="toc-chap-summary">
+              打破直觀直覺，建立刑法「評價行為」到「評價行為人」之兩階段精密審查架構。
+            </p>
+            <ul class="toc-sub-list">
+              <li>
+                <a href="#section-core" class="toc-sub-item">
+                  <span class="toc-item-dot"></span>
+                  <span class="toc-item-title">1.1 日常直觀盲點：「一個壞人做了一件壞事」之司法實務難題</span>
+                </a>
+              </li>
+              <li>
+                <a href="#flowStep1" class="toc-sub-item">
+                  <span class="toc-item-dot"></span>
+                  <span class="toc-item-title">1.2 第一階段：評價「行為」（客觀壞事 ＝ 構成要件該當 ＋ 無阻卻違法事由）</span>
+                </a>
+              </li>
+              <li>
+                <a href="#flowStep2" class="toc-sub-item">
+                  <span class="toc-item-dot"></span>
+                  <span class="toc-item-title">1.3 經驗推定橋樑：做壞事者絕大多數具備可非難性，推定行為人具備罪責</span>
+                </a>
+              </li>
+              <li>
+                <a href="#rebuttalBox" class="toc-sub-item">
+                  <span class="toc-item-dot"></span>
+                  <span class="toc-item-title">1.4 第二階段：反證推翻機制（容許行為人提出阻卻或減免罪責抗辯）</span>
+                </a>
+              </li>
+              <li>
+                <a href="#section-core" class="toc-sub-item">
+                  <span class="toc-item-dot"></span>
+                  <span class="toc-item-title">1.5 目的犯罪論之主客觀構造檢驗（法秩序實質正當化與三階論流程）</span>
+                </a>
+              </li>
+            </ul>
+          </div>
 
-          <a href="#section-cases" class="portal-card" title="跳轉至12大經典案例庫">
-            <div class="portal-card-top">
-              <span class="portal-card-icon purple">📚</span>
-              <span class="portal-card-badge">12大情境</span>
+          <!-- 第二篇：12大經典案例庫 (橫跨寬欄) -->
+          <div class="toc-chapter-box toc-chapter-wide">
+            <div class="toc-chap-header">
+              <div class="chap-badge-wrap">
+                <span class="chap-num-badge purple">貳</span>
+                <span class="chap-scope-tag">實務實戰 • 12 大情境</span>
+              </div>
+              <a href="#section-cases" class="chap-jump-link" title="前往12大經典案例庫">
+                直達案例庫 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+              </a>
             </div>
-            <h4 class="portal-card-title">12大經典案例庫</h4>
-            <p class="portal-card-desc">櫻桃案（權利濫用）、強抽輸血案（人性尊嚴）、黑白猜等</p>
-            <div class="portal-card-action">
-              <span>查閱案例</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
-            </div>
-          </a>
+            <h3 class="toc-chap-title">
+              <a href="#section-cases">12 大典型抗辯事由、法理剖析與現行法審查</a>
+            </h3>
+            <p class="toc-chap-summary">
+              精選 12 個模擬被告口白、核心條文、司法官審查要件與 2018 原著對比現行法適用狀態。
+            </p>
 
-          <a href="#section-quiz" class="portal-card" title="跳轉至法學觀念測驗">
-            <div class="portal-card-top">
-              <span class="portal-card-icon green">💡</span>
-              <span class="portal-card-badge">實戰速測</span>
+            <!-- 案例四大子分類 -->
+            <div class="toc-cases-subgroups">
+              <!-- 子分類 1: 阻卻罪責 -->
+              <div class="cases-subgroup">
+                <div class="subgroup-title">
+                  <span class="group-icon">🛡️</span>
+                  <span>一、阻卻罪責事由（評價行為人 • 6案）</span>
+                </div>
+                <div class="subgroup-cases-grid">
+                  <a href="#case-1" class="toc-case-link" title="案例 1-1 欠缺不法意識">
+                    <span class="case-idx">1-1</span>
+                    <span class="case-name">欠缺不法意識之抗辯</span>
+                    <span class="case-law">刑法 §16</span>
+                  </a>
+                  <a href="#case-2" class="toc-case-link" title="案例 1-2 責任能力(年齡)">
+                    <span class="case-idx">1-2</span>
+                    <span class="case-name">責任能力（年齡）之抗辯</span>
+                    <span class="case-law">刑法 §18 / 少事法</span>
+                  </a>
+                  <a href="#case-3" class="toc-case-link" title="案例 1-3 責任能力(精神狀況)">
+                    <span class="case-idx">1-3</span>
+                    <span class="case-name">責任能力（精神狀況）之抗辯</span>
+                    <span class="case-law">刑法 §19 / §87</span>
+                  </a>
+                  <a href="#case-4" class="toc-case-link" title="案例 1-4 責任能力(生理缺陷)">
+                    <span class="case-idx">1-4</span>
+                    <span class="case-name">責任能力（生理缺陷）之抗辯</span>
+                    <span class="case-law">刑法 §20 瘖啞人</span>
+                  </a>
+                  <a href="#case-5" class="toc-case-link" title="案例 1-5 防衛避難過當">
+                    <span class="case-idx">1-5</span>
+                    <span class="case-name">防衛過當與避難過當</span>
+                    <span class="case-law">刑法 §23 / §24 但書</span>
+                  </a>
+                  <a href="#case-6" class="toc-case-link" title="案例 1-6 欠缺期待可能性">
+                    <span class="case-idx">1-6</span>
+                    <span class="case-name">欠缺期待可能性之抗辯</span>
+                    <span class="case-law">超法定阻卻罪責</span>
+                  </a>
+                </div>
+              </div>
+
+              <!-- 子分類 2: 法定阻卻違法 -->
+              <div class="cases-subgroup">
+                <div class="subgroup-title">
+                  <span class="group-icon">📜</span>
+                  <span>二、法定阻卻違法事由（評價行為 • 2案）</span>
+                </div>
+                <div class="subgroup-cases-grid">
+                  <a href="#case-7" class="toc-case-link" title="案例 1-7 依法令之行為">
+                    <span class="case-idx">1-7</span>
+                    <span class="case-name">依法令之行為（優生保健法）</span>
+                    <span class="case-law">刑法 §21 第 1 項</span>
+                  </a>
+                  <a href="#case-8" class="toc-case-link" title="案例 1-8 依命令之行為">
+                    <span class="case-idx">1-8</span>
+                    <span class="case-name">依命令之行為（公務服從）</span>
+                    <span class="case-law">刑法 §21 第 2 項</span>
+                  </a>
+                </div>
+              </div>
+
+              <!-- 子分類 3: 超法定阻卻違法 -->
+              <div class="cases-subgroup">
+                <div class="subgroup-title">
+                  <span class="group-icon">⚖️</span>
+                  <span>三、超法定阻卻違法事由（法理創設 • 2案）</span>
+                </div>
+                <div class="subgroup-cases-grid">
+                  <a href="#case-9" class="toc-case-link" title="案例 1-9 【黑白猜打巴掌案】">
+                    <span class="case-idx">1-9</span>
+                    <span class="case-name">【黑白猜】得被害人承諾</span>
+                    <span class="case-law">超法定阻卻違法</span>
+                  </a>
+                  <a href="#case-10" class="toc-case-link" title="案例 1-10 【火海救子案】">
+                    <span class="case-idx">1-10</span>
+                    <span class="case-name">【火海救子】義務衝突</span>
+                    <span class="case-law">超法定阻卻違法</span>
+                  </a>
+                </div>
+              </div>
+
+              <!-- 子分類 4: 實質極限排除 -->
+              <div class="cases-subgroup highlight-group">
+                <div class="subgroup-title">
+                  <span class="group-icon">⚠️</span>
+                  <span>四、阻卻違法實質極限（不能阻卻違法 • 2大爭端案）</span>
+                </div>
+                <div class="subgroup-cases-grid">
+                  <a href="#case-11" class="toc-case-link alert-link" title="案例 1-11 【櫻桃案】權利濫用">
+                    <span class="case-idx alert">1-11</span>
+                    <span class="case-name">【櫻桃案】正當防衛權利濫用</span>
+                    <span class="case-law">§23 限縮（成立殺人罪）</span>
+                  </a>
+                  <a href="#case-12" class="toc-case-link alert-link" title="案例 1-12 【強抽輸血案】人性尊嚴">
+                    <span class="case-idx alert">1-12</span>
+                    <span class="case-name">【強抽輸血案】憲法人性尊嚴底線</span>
+                    <span class="case-law">§24 限縮（成立傷害罪）</span>
+                  </a>
+                </div>
+              </div>
             </div>
-            <h4 class="portal-card-title">實戰觀念測驗</h4>
-            <p class="portal-card-desc">精選司法官與律師國考爭點題目，即時答題與詳解即時反饋</p>
-            <div class="portal-card-action">
-              <span>開始測驗</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+          </div>
+
+          <!-- 第三篇：綜合重點速查表 -->
+          <div class="toc-chapter-box">
+            <div class="toc-chap-header">
+              <div class="chap-badge-wrap">
+                <span class="chap-num-badge green">參</span>
+                <span class="chap-scope-tag">矩陣對照</span>
+              </div>
+              <a href="#section-table" class="chap-jump-link" title="前往綜合重點速查表">
+                直達速查表 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+              </a>
             </div>
-          </a>
+            <h3 class="toc-chap-title">
+              <a href="#section-table">綜合比較與重點速查表</a>
+            </h3>
+            <p class="toc-chap-summary">
+              一覽 12 項抗辯事由之法條依據、構成要件、法律效果與現行法審查狀態，支援即時關鍵字篩選。
+            </p>
+            <ul class="toc-sub-list">
+              <li>
+                <a href="#section-table" class="toc-sub-item">
+                  <span class="toc-item-dot"></span>
+                  <span class="toc-item-title">3.1 阻卻罪責篇（§16~§20、§23/§24 但書、期待可能性）</span>
+                </a>
+              </li>
+              <li>
+                <a href="#section-table" class="toc-sub-item">
+                  <span class="toc-item-dot"></span>
+                  <span class="toc-item-title">3.2 法定阻卻違法篇（§21 條文要件與法律效果）</span>
+                </a>
+              </li>
+              <li>
+                <a href="#section-table" class="toc-sub-item">
+                  <span class="toc-item-dot"></span>
+                  <span class="toc-item-title">3.3 超法定阻卻違法篇（黑白猜、義務衝突之實質法理）</span>
+                </a>
+              </li>
+              <li>
+                <a href="#section-table" class="toc-sub-item">
+                  <span class="toc-item-dot"></span>
+                  <span class="toc-item-title">3.4 實質極限排除篇（櫻桃案、輸血案之定罪效果）</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- 第四篇：總結結論與法制前瞻 -->
+          <div class="toc-chapter-box">
+            <div class="toc-chap-header">
+              <div class="chap-badge-wrap">
+                <span class="chap-num-badge amber">肆</span>
+                <span class="chap-scope-tag">修法前瞻</span>
+              </div>
+              <a href="#section-summary" class="chap-jump-link" title="前往總結結論">
+                直達總結 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+              </a>
+            </div>
+            <h3 class="toc-chap-title">
+              <a href="#section-summary">總結結論與法制前瞻評估</a>
+            </h3>
+            <p class="toc-chap-summary">
+              2018 原書教材在古典三階層體系完全適用，同步整合 2022~2023 刑法、民法與少事法重大修法。
+            </p>
+            <ul class="toc-sub-list">
+              <li>
+                <a href="#section-summary" class="toc-sub-item">
+                  <span class="toc-item-dot"></span>
+                  <span class="toc-item-title">4.1 2022 重大改革：刑法第 87 條監護處分打破 5 年上限革新</span>
+                </a>
+              </li>
+              <li>
+                <a href="#section-summary" class="toc-sub-item">
+                  <span class="toc-item-dot"></span>
+                  <span class="toc-item-title">4.2 2023 連動革新：民法 18 歲成年與少事法「曝險行政先行」配套</span>
+                </a>
+              </li>
+              <li>
+                <a href="#section-summary" class="toc-sub-item">
+                  <span class="toc-item-dot"></span>
+                  <span class="toc-item-title">4.3 歷久彌新：古典「不法推定罪責」兩階段論述之永恆法理價值</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- 第五篇：法學觀念互動速測 -->
+          <div class="toc-chapter-box toc-chapter-wide">
+            <div class="toc-chap-header">
+              <div class="chap-badge-wrap">
+                <span class="chap-num-badge teal">伍</span>
+                <span class="chap-scope-tag">考點實戰</span>
+              </div>
+              <a href="#section-quiz" class="chap-jump-link" title="前往法學觀念測驗">
+                直達測驗 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+              </a>
+            </div>
+            <h3 class="toc-chap-title">
+              <a href="#section-quiz">法學觀念互動速測（司律爭點精選）</a>
+            </h3>
+            <p class="toc-chap-summary">
+              精選 3 道實務爭點互動試題，提供即時正解判斷、錯誤原因分析與考點深度詳解。
+            </p>
+            <ul class="toc-sub-list toc-sub-list-grid">
+              <li>
+                <a href="#section-quiz" class="toc-sub-item">
+                  <span class="toc-item-dot"></span>
+                  <span class="toc-item-title">問題 1：刑法第 19 條心智缺陷不罰與第 87 條監護處分最新改革規定</span>
+                </a>
+              </li>
+              <li>
+                <a href="#section-quiz" class="toc-sub-item">
+                  <span class="toc-item-dot"></span>
+                  <span class="toc-item-title">問題 2：極端緊急避難失衡與「欠缺期待可能性」超法定事由辨析</span>
+                </a>
+              </li>
+              <li>
+                <a href="#section-quiz" class="toc-sub-item">
+                  <span class="toc-item-dot"></span>
+                  <span class="toc-item-title">問題 3：刑法第 20 條瘖啞人「自幼既聾且啞」嚴格實務判準檢驗</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
         </div>
       </div>
     </section>
 
     <!-- 影音講解微課：互動動態播放器（初級／中級／高級） -->
     <section id="section-video" class="content-section video-section">
+      <!-- 章節頂部導航條 -->
+      <div class="chapter-nav-header">
+        <a href="#section-hero" class="btn-back-to-toc" title="返回講義首頁基本目錄">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+          <span>← 返回全書目錄</span>
+        </a>
+        <div class="chapter-nav-info">
+          <span class="chapter-current-tag">📖 當前章節：導讀 • 影音動態微課</span>
+        </div>
+        <div class="chapter-nav-pagination">
+          <button class="btn-chap-nav prev-chap disabled" title="已是第一章" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg> 上一章
+          </button>
+          <a href="#section-core" class="btn-chap-nav next-chap" title="前往第一篇：核心法律思維">
+            下一章 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+          </a>
+        </div>
+      </div>
+
       <div class="section-header">
         <div class="section-number">影</div>
         <div>
@@ -441,10 +809,41 @@
           </div>
         </aside>
       </div>
+
+      <!-- 章節底部導航條 -->
+      <div class="chapter-nav-footer">
+        <a href="#section-hero" class="btn-back-to-toc secondary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+          <span>← 返回全書目錄</span>
+        </a>
+        <a href="#section-core" class="btn-chap-nav next-chap-primary">
+          <span>前進第一篇：核心法律思維</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+        </a>
+      </div>
     </section>
 
     <!-- 壹、核心法律思維 -->
     <section id="section-core" class="content-section">
+      <!-- 章節頂部導航條 -->
+      <div class="chapter-nav-header">
+        <a href="#section-hero" class="btn-back-to-toc" title="返回講義首頁基本目錄">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+          <span>← 返回全書目錄</span>
+        </a>
+        <div class="chapter-nav-info">
+          <span class="chapter-current-tag">📖 當前章節：第一篇 • 核心法律思維</span>
+        </div>
+        <div class="chapter-nav-pagination">
+          <a href="#section-video" class="btn-chap-nav prev-chap" title="回到導讀：影音動態微課">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg> 上一章
+          </a>
+          <a href="#section-cases" class="btn-chap-nav next-chap" title="前往第二篇：12大經典案例庫">
+            下一章 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+          </a>
+        </div>
+      </div>
+
       <div class="section-header">
         <div class="section-number">壹</div>
         <div>
@@ -582,10 +981,41 @@
           </div>
         </div>
       </div>
+
+      <!-- 章節底部導航條 -->
+      <div class="chapter-nav-footer">
+        <a href="#section-hero" class="btn-back-to-toc secondary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+          <span>← 返回全書目錄</span>
+        </a>
+        <a href="#section-cases" class="btn-chap-nav next-chap-primary">
+          <span>前進第二篇：12大經典案例庫</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+        </a>
+      </div>
     </section>
 
     <!-- 貳、案例解析與抗辯事由 -->
     <section id="section-cases" class="content-section">
+      <!-- 章節頂部導航條 -->
+      <div class="chapter-nav-header">
+        <a href="#section-hero" class="btn-back-to-toc" title="返回講義首頁基本目錄">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+          <span>← 返回全書目錄</span>
+        </a>
+        <div class="chapter-nav-info">
+          <span class="chapter-current-tag">📖 當前章節：第二篇 • 12大經典案例庫</span>
+        </div>
+        <div class="chapter-nav-pagination">
+          <a href="#section-core" class="btn-chap-nav prev-chap" title="回到第一篇：核心法律思維">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg> 上一章
+          </a>
+          <a href="#section-table" class="btn-chap-nav next-chap" title="前往第三篇：綜合重點速查表">
+            下一章 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+          </a>
+        </div>
+      </div>
+
       <div class="section-header">
         <div class="section-number">貳</div>
         <div>
@@ -1157,10 +1587,41 @@
         </article>
 
       </div>
+
+      <!-- 章節底部導航條 -->
+      <div class="chapter-nav-footer">
+        <a href="#section-hero" class="btn-back-to-toc secondary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+          <span>← 返回全書目錄</span>
+        </a>
+        <a href="#section-table" class="btn-chap-nav next-chap-primary">
+          <span>前進第三篇：綜合重點速查表</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+        </a>
+      </div>
     </section>
 
     <!-- 參、綜合比較與重點速查表 -->
     <section id="section-table" class="content-section">
+      <!-- 章節頂部導航條 -->
+      <div class="chapter-nav-header">
+        <a href="#section-hero" class="btn-back-to-toc" title="返回講義首頁基本目錄">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+          <span>← 返回全書目錄</span>
+        </a>
+        <div class="chapter-nav-info">
+          <span class="chapter-current-tag">📖 當前章節：第三篇 • 綜合重點速查表</span>
+        </div>
+        <div class="chapter-nav-pagination">
+          <a href="#section-cases" class="btn-chap-nav prev-chap" title="回到第二篇：12大經典案例庫">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg> 上一章
+          </a>
+          <a href="#section-summary" class="btn-chap-nav next-chap" title="前往第四篇：總結結論與法制前瞻">
+            下一章 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+          </a>
+        </div>
+      </div>
+
       <div class="section-header">
         <div class="section-number">參</div>
         <div>
@@ -1268,10 +1729,41 @@
           </table>
         </div>
       </div>
+
+      <!-- 章節底部導航條 -->
+      <div class="chapter-nav-footer">
+        <a href="#section-hero" class="btn-back-to-toc secondary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+          <span>← 返回全書目錄</span>
+        </a>
+        <a href="#section-summary" class="btn-chap-nav next-chap-primary">
+          <span>前進第四篇：總結結論與法制前瞻</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+        </a>
+      </div>
     </section>
 
     <!-- 肆、總結結論 -->
     <section id="section-summary" class="content-section">
+      <!-- 章節頂部導航條 -->
+      <div class="chapter-nav-header">
+        <a href="#section-hero" class="btn-back-to-toc" title="返回講義首頁基本目錄">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+          <span>← 返回全書目錄</span>
+        </a>
+        <div class="chapter-nav-info">
+          <span class="chapter-current-tag">📖 當前章節：第四篇 • 總結結論與法制前瞻</span>
+        </div>
+        <div class="chapter-nav-pagination">
+          <a href="#section-table" class="btn-chap-nav prev-chap" title="回到第三篇：綜合重點速查表">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg> 上一章
+          </a>
+          <a href="#section-quiz" class="btn-chap-nav next-chap" title="前往第五篇：法學觀念互動速測">
+            下一章 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+          </a>
+        </div>
+      </div>
+
       <div class="summary-hero-card">
         <div class="summary-icon-bulb">💡</div>
         <div class="summary-content">
@@ -1298,10 +1790,41 @@
           </div>
         </div>
       </div>
+
+      <!-- 章節底部導航條 -->
+      <div class="chapter-nav-footer">
+        <a href="#section-hero" class="btn-back-to-toc secondary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+          <span>← 返回全書目錄</span>
+        </a>
+        <a href="#section-quiz" class="btn-chap-nav next-chap-primary">
+          <span>前進第五篇：法學觀念互動速測</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+        </a>
+      </div>
     </section>
 
     <!-- 伍、法學觀念互動速測 -->
     <section id="section-quiz" class="content-section">
+      <!-- 章節頂部導航條 -->
+      <div class="chapter-nav-header">
+        <a href="#section-hero" class="btn-back-to-toc" title="返回講義首頁基本目錄">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+          <span>← 返回全書目錄</span>
+        </a>
+        <div class="chapter-nav-info">
+          <span class="chapter-current-tag">📖 當前章節：第五篇 • 法學觀念互動速測</span>
+        </div>
+        <div class="chapter-nav-pagination">
+          <a href="#section-summary" class="btn-chap-nav prev-chap" title="回到第四篇：總結結論與法制前瞻">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg> 上一章
+          </a>
+          <button class="btn-chap-nav next-chap disabled" title="已是最後一章" disabled>
+            末章 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+        </div>
+      </div>
+
       <div class="section-header">
         <div class="section-number">伍</div>
         <div>
@@ -1349,6 +1872,14 @@
           </div>
           <div class="quiz-feedback" style="display:none;"></div>
         </div>
+      </div>
+
+      <!-- 章節底部導航條 -->
+      <div class="chapter-nav-footer">
+        <a href="#section-hero" class="btn-back-to-toc secondary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+          <span>← 研讀完畢，返回首頁全書目錄</span>
+        </a>
       </div>
     </section>
 
